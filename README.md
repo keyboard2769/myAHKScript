@@ -2,4 +2,4 @@
 
 - a *laptop* including mouse and keyboard and prompt
 - a *handhold* including keyboard only
-- a *joystickToMouse* including subscript for handholding pc, see [gpd](http://www.softwincn.com/).
+- a *joystickToMouse* including subscript for handholding pc, like [gpd](http://www.softwincn.com/).
