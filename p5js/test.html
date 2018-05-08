@@ -1,0 +1,47 @@
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
+<script >
+    
+    
+    
+var roller=0
+var message="no"
+var flag=flase
+
+function setup() { 
+  createCanvas(320, 240);
+  frameRate(16);
+  textAlign(LEFT,TOP);
+  noStroke();
+} 
+
+function draw() { 
+  background(0xCC);
+  roller++;roller&=0x0F;
+  
+  fill(0x77);rect(10,10,160,20);
+  fill(0x33,0xEE,0x33);text(
+    "勝手に触るんじゃねーよ！"
+     ,12,12);
+  
+  flag=roller<7;
+  if(flag){
+    fill(0x99,0x66,0x33);
+    text("+",mouseX-16,mouseY-16);  
+  }
+  
+  
+  
+}//+++
+
+function mousePressed(){
+  alert("this is a test version");
+}
+
+
+</script>
+</head>
+<body>
+</body>
+</html>
