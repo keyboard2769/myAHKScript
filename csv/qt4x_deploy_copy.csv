@@ -1,0 +1,5 @@
+include,path
+,\Qt\x.x.x\bin\libgcc_s_dw2-1.dll
+,\Qt\x.x.x\bin\mingwm10.dll
+,\Qt\x.x.x\bin\QtCore4.dll
+,\Qt\x.x.x\bin\QtGui4.dll
