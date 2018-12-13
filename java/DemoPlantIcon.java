@@ -39,7 +39,7 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcInclineBelcon ttBelt;
+  EcMotorIcon ttIcon;
 
   //=== overridden
   @Override
@@ -52,7 +52,8 @@ public class DemoPlantIcon extends PApplet{
 
     //-- binding
     //-- construction
-    ttBelt=new EcInclineBelcon("vhb", 200, 200, 80, 40, 1590);
+    ttIcon=new EcMotorIcon();
+    ttIcon.ccSetLocation(100, 100);
 
     //--post setting
   }//+++
@@ -68,7 +69,7 @@ public class DemoPlantIcon extends PApplet{
     int lpTestValue=ceil(map(mouseX, 0, width, 0, 1100));
 
     //-- local loop
-    ttBelt.ccUpdate();
+    ttIcon.ccUpdate();
 
     //-- system loop
     //-- tagging
@@ -85,29 +86,27 @@ public class DemoPlantIcon extends PApplet{
     switch(key){
 
       case 'a':
-        ttBelt.ccSetDirectionMode('l');
+        ttIcon.ccSetIsAN(true);
         break;
 
       case 'd':
-        ttBelt.ccSetDirectionMode('r');
+        ttIcon.ccSetIsAL(true);
         break;
 
       case 'w':
-        ttBelt.ccSetMotorStatus('n');
         break;
 
       case 's':
-        ttBelt.ccSetMotorStatus('l');
+        ttIcon.ccSetIsMC(true);
         break;
 
       case 'f':
-        ttBelt.ccSetIsEMS(true);
         break;
 
       case ' ':
-        ttBelt.ccSetDirectionMode('a');
-        ttBelt.ccSetMotorStatus('x');
-        ttBelt.ccSetIsEMS(false);
+        ttIcon.ccSetIsAN(false);
+        ttIcon.ccSetIsMC(false);
+        ttIcon.ccSetIsAL(false);
         break;
 
       case 'q':
@@ -128,7 +127,7 @@ public class DemoPlantIcon extends PApplet{
 
   //=== utiliry
   //=== inner
-  //=== ** for localui
+  //=== inner ** for localui
   public class EcValueBox extends EcTextBox{
 
     protected int cmDigit=4;
@@ -216,7 +215,59 @@ public class DemoPlantIcon extends PApplet{
 
   }//***
 
-  //=== ** for plant shape
+  //=== inner ** for plant icon
+  public class EcMotorIcon extends EcElement{
+    
+    private final int
+       cmLampW=4,
+       cmLampH=8;
+
+    private boolean cmIsMC, cmIsAN, cmIsAL;
+    
+    public EcMotorIcon(){
+      super();
+
+      cmIsMC=false;
+      cmIsAN=false;
+      cmIsAL=false;
+
+      ccSetSize(cmLampW*5, cmLampH+3);
+
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+
+      pbOwner.stroke(EcFactory.C_LIT);
+      pbOwner.fill(C_SHAPE_METAL);
+      pbOwner.rect(cmX, cmY, cmW, cmH, cmH/2);
+      pbOwner.noStroke();
+
+      pbOwner.fill(cmIsAN?EcFactory.C_GREEN:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+cmLampW*1, cmY+2, cmLampW, cmLampH);
+      pbOwner.fill(cmIsMC?EcFactory.C_ORANGE:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+cmLampW*2, cmY+2, cmLampW, cmLampH);
+      pbOwner.fill(cmIsAL?EcFactory.C_RED:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+cmLampW*3, cmY+2, cmLampW, cmLampH);
+
+    }//+++
+
+    public void ccSetIsMC(boolean pxStatus){
+      cmIsMC=pxStatus;
+    }//+++
+
+    public void ccSetIsAN(boolean pxStatus){
+      cmIsAN=pxStatus;
+    }//+++
+
+    public void ccSetIsAL(boolean pxStatus){
+      cmIsAL=pxStatus;
+    }//+++
+
+  }//***
+
+  //=== inner ** for plant shape
   public class EcHopperShape extends EcShape{
 
     protected int cmCut=2;
@@ -262,25 +313,25 @@ public class DemoPlantIcon extends PApplet{
 
   }//***
 
-  //=== ** for plant unit
-  public interface EcAbstractUnit{
-  ;
+  //=== inner ** for plant unit
+  public interface EiAbstractUnit{
+    ;
 
   }
 
-  public interface EcMoterizedUnit extends EcAbstractUnit{
+  public interface EiMoterizedUnit extends EiAbstractUnit{
 
     public void ccSetMotorStatus(char pxStatus_nlx);
 
   }//***
 
-  public interface EcReversibleMoterizedUnit extends EcMoterizedUnit{
+  public interface EiReversibleMoterizedUnit extends EiMoterizedUnit{
 
     abstract public void ccSetDirectionMode(char pxMode_alr);
 
   }//***
 
-  class EcBelconUnit extends EcElement implements EcReversibleMoterizedUnit{
+  class EcBelconUnit extends EcElement implements EiReversibleMoterizedUnit{
 
     protected final EcStatusLamp cmMotorLampL;
 
@@ -361,7 +412,7 @@ public class DemoPlantIcon extends PApplet{
 
   }//***
 
-  class EcFeeder extends EcElement implements EcMoterizedUnit{
+  class EcFeeder extends EcElement implements EiMoterizedUnit{
 
     private final EcValueBox cmBox;
 
@@ -492,46 +543,65 @@ public class DemoPlantIcon extends PApplet{
 
   class EcInclineBelcon extends EcBelconUnit{
 
+    private final EcLamp cmCAS;
+
     public EcInclineBelcon(
       String pxName, int pxX, int pxY, int pxLength, int pxCut, int pxHeadID
     ){
 
       super();
       ccSetBound(pxX, pxY, pxLength, pxCut);
-      
+
       cmMotorLampL.ccSetLocation(
         pxX+1-cmEmsLamp.ccGetW()/2,
         pxY+1-cmEmsLamp.ccGetW()/2
       );
-      
+
       cmMotorLampR.ccSetLocation(
         pxX+pxLength-cmEmsLamp.ccGetW()/2,
         pxY+1+pxCut-cmEmsLamp.ccGetW()/2
       );
-      
+
       cmEmsLamp.ccSetLocation(
         pxX+pxLength-cmEmsLamp.ccGetW()*2,
         pxY+1+pxCut-cmEmsLamp.ccGetW()/2
       );
 
+      cmCAS=new EcLamp();
+      cmCAS.ccSetLocation(cmMotorLampL, pxCut, 0);
+      cmCAS.ccSetSize(cmEmsLamp);
+      cmCAS.ccSetText("C");
+      cmCAS.ccSetColor(EcFactory.C_LIT_GREEN);
+
     }//++!
 
     @Override
     public void ccUpdate(){
-      
+
       strokeWeight(20);
-      stroke(C_SHAPE_METAL);{
-        pbOwner.line(cmX,cmY,cmX+cmH,cmX+cmH);
-        pbOwner.line(cmX+cmH,cmX+cmH,ccEndX(),ccEndY());
-      }strokeWeight(1);
+      stroke(C_SHAPE_METAL);
+      {
+        pbOwner.line(cmX, cmY, cmX+cmH, cmX+cmH);
+        pbOwner.line(cmX+cmH, cmX+cmH, ccEndX(), ccEndY());
+      }
+      strokeWeight(1);
       noStroke();
-      
+
+      cmCAS.ccUpdate();
       cmMotorLampL.ccUpdate();
       cmEmsLamp.ccUpdate();
       cmMotorLampR.ccUpdate();
     }//+++
 
+    void ccSetIsCAS(boolean pxStatus){
+      cmCAS.ccSetActivated(pxStatus);
+    }//+++
+
   }//***
+  
+  class EcDryer{
+    //[HEAD]::now waht???
+  }
 
   //=== entry
   static public void main(String[] passedArgs){
