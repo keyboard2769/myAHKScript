@@ -39,7 +39,7 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcMotorIcon ttIcon;
+  EcDryer ttD;
 
   //=== overridden
   @Override
@@ -52,8 +52,7 @@ public class DemoPlantIcon extends PApplet{
 
     //-- binding
     //-- construction
-    ttIcon=new EcMotorIcon();
-    ttIcon.ccSetLocation(100, 100);
+    ttD=new EcDryer("<>",100,100,1590);
 
     //--post setting
   }//+++
@@ -69,7 +68,7 @@ public class DemoPlantIcon extends PApplet{
     int lpTestValue=ceil(map(mouseX, 0, width, 0, 1100));
 
     //-- local loop
-    ttIcon.ccUpdate();
+    ttD.ccUpdate();
 
     //-- system loop
     //-- tagging
@@ -86,27 +85,26 @@ public class DemoPlantIcon extends PApplet{
     switch(key){
 
       case 'a':
-        ttIcon.ccSetIsAN(true);
+        ttD.ccSetMotorStatus('a');
         break;
 
       case 'd':
-        ttIcon.ccSetIsAL(true);
+        ttD.ccSetMotorStatus('l');
         break;
 
       case 'w':
+        ttD.ccSetMotorStatus('n');
         break;
 
       case 's':
-        ttIcon.ccSetIsMC(true);
+        ttD.ccSetMotorStatus('c');
         break;
 
       case 'f':
         break;
 
       case ' ':
-        ttIcon.ccSetIsAN(false);
-        ttIcon.ccSetIsMC(false);
-        ttIcon.ccSetIsAL(false);
+        ttD.ccSetMotorStatus('x');
         break;
 
       case 'q':
@@ -194,7 +192,8 @@ public class DemoPlantIcon extends PApplet{
     @Override
     public void ccUpdate(){
 
-      ccDrawRoundLampAtCenter(cmStatusColorList.get(cmStatus)
+      ccDrawRoundLampAtCenter(
+        cmStatusColorList.get(cmStatus)
       );
       ccDrawTextAtCenter(EcFactory.C_LAMP_TEXT);
       ccDrawName(EcFactory.C_LABEL_TEXT);
@@ -217,13 +216,13 @@ public class DemoPlantIcon extends PApplet{
 
   //=== inner ** for plant icon
   public class EcMotorIcon extends EcElement{
-    
-    private final int
-       cmLampW=4,
-       cmLampH=8;
+
+    private final int // [TODO]::make static
+      cmLampW=4,
+      cmLampH=8;
 
     private boolean cmIsMC, cmIsAN, cmIsAL;
-    
+
     public EcMotorIcon(){
       super();
 
@@ -237,7 +236,6 @@ public class DemoPlantIcon extends PApplet{
 
     @Override
     public void ccUpdate(){
-      
 
       pbOwner.stroke(EcFactory.C_LIT);
       pbOwner.fill(C_SHAPE_METAL);
@@ -315,7 +313,7 @@ public class DemoPlantIcon extends PApplet{
 
   //=== inner ** for plant unit
   public interface EiAbstractUnit{
-    ;
+  ;
 
   }
 
@@ -329,6 +327,61 @@ public class DemoPlantIcon extends PApplet{
 
     abstract public void ccSetDirectionMode(char pxMode_alr);
 
+  }//***
+  
+  class EcMoterizedUnit extends EcElement implements EiMoterizedUnit{
+    
+    EcMotorIcon cmMotor;
+    
+    public EcMoterizedUnit(){
+      super();
+      cmMotor=new EcMotorIcon();
+    }
+    
+    /**
+     * [a]mc+an..
+     * [c]mc..
+     * [n]an..
+     * [l]al..
+     * [x]OFF
+     * @param pxStatus_acnlx #
+     */
+    @Override
+    public void ccSetMotorStatus(char pxStatus_acnlx){
+      switch(pxStatus_acnlx){
+        
+        case 'a':
+          cmMotor.ccSetIsMC(true);
+          cmMotor.ccSetIsAN(true);
+          cmMotor.ccSetIsAL(false);
+          break;
+          
+        case 'c':
+          cmMotor.ccSetIsMC(true);
+          cmMotor.ccSetIsAN(false);
+          cmMotor.ccSetIsAL(false);
+          break;
+          
+        case 'n':
+          cmMotor.ccSetIsMC(false);
+          cmMotor.ccSetIsAN(true);
+          cmMotor.ccSetIsAL(false);
+          break;
+          
+        case 'l':
+          cmMotor.ccSetIsMC(false);
+          cmMotor.ccSetIsAN(false);
+          cmMotor.ccSetIsAL(true);
+          break;
+        
+        default:
+          cmMotor.ccSetIsMC(false);
+          cmMotor.ccSetIsAN(false);
+          cmMotor.ccSetIsAL(false);
+          break;
+      }
+    }//+++
+    
   }//***
 
   class EcBelconUnit extends EcElement implements EiReversibleMoterizedUnit{
@@ -598,10 +651,57 @@ public class DemoPlantIcon extends PApplet{
     }//+++
 
   }//***
-  
-  class EcDryer{
-    //[HEAD]::now waht???
-  }
+
+  class EcDryer extends EcMoterizedUnit{
+    
+    private boolean cmIsOnFire;
+    
+    
+    private final EcValueBox cmKPABox;
+    private final EcGauge cmTPHGauge;
+    private final EcValueBox cmTPHBox;
+    
+    public EcDryer(
+      String pxName, int pxX, int pxY, int pxHeadID
+    ){
+      
+      super();
+      ccTakeKey(pxName);
+      ccSetLocation(pxX, pxY);
+      ccSetID(pxHeadID);
+      
+      cmIsOnFire=false;
+      
+      cmKPABox=new EcValueBox();
+      cmKPABox.ccSetValue(-20, 4);
+      cmKPABox.ccSetUnit(" kPa");
+      cmKPABox.ccSetSize();
+      
+      //[HEAD]::now waht???
+      
+      cmTPHGauge=new EcGauge();
+      
+      cmTPHBox=new EcValueBox();
+      
+      //-- layout
+      ccSetSize(cmKPABox.ccGetW()*3, cmKPABox.ccGetH()*3);
+      
+      //[TEST]::delete later
+      VcConst.ccLogln("boxL", cmKPABox.ccGetW());
+      VcConst.ccLogln("all W", ccGetW());
+      VcConst.ccLogln("all H", ccGetH());
+      
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+      pbOwner.fill(EcFactory.C_GRAY);
+      pbOwner.rect(cmX,cmY,cmW,cmH);
+    
+    }//+++
+    
+  }//***
 
   //=== entry
   static public void main(String[] passedArgs){
