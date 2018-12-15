@@ -12,11 +12,15 @@ import processing.core.*;
 
 import kosui.ppplocalui.*;
 import kosui.ppputil.*;
+import static processing.core.PConstants.CHORD;
+import static processing.core.PConstants.PI;
 
 public class DemoPlantIcon extends PApplet{
 
   //=== 
   static final int C_SHAPE_METAL=0xFF999999;//supposedly deep gray
+  
+  static final int C_SHAPE_DUCT=0xFFAAAAAA;
 
   static final int C_LAMP_MC=0xFFCC0000;//supposedly orange
 
@@ -39,21 +43,24 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcDryer ttD;
-
+  EcBlowerShape ttt;
+  
   //=== overridden
   @Override
   public void setup(){
 
     size(800, 600);
-    //noSmooth();
+    noSmooth();
     //-- initiating
     EcFactory.ccInit(this);
 
     //-- binding
     //-- construction
-    ttD=new EcDryer("<>",100,100,1590);
-
+    ttt=new EcBlowerShape();
+    ttt.ccSetLocation(100, 100);
+    ttt.ccSetSize(20, 60);
+      
+    
     //--post setting
   }//+++
 
@@ -65,12 +72,14 @@ public class DemoPlantIcon extends PApplet{
     pbRoller++;
     pbRoller&=0x0F;
     boolean lpHalsec=pbRoller<7;
-    int lpTestValue=ceil(map(mouseX, 0, width, -1, 300));
+    int lpTestValue=ceil(map(mouseX, 0, width, 1, 99));
 
     //-- local loop
-    ttD.ccSetTPH(lpTestValue);
-    ttD.ccUpdate();
-
+    
+    
+    
+    ttt.ccUpdate();
+    
     //-- system loop
     //-- tagging
     VcTagger.ccTag("roller", pbRoller);
@@ -86,32 +95,36 @@ public class DemoPlantIcon extends PApplet{
     switch(key){
 
       case 'a':
-        ttD.ccSetMotorStatus('a');
-        break;
+        ttt.ccSetDirection('l');
+      break;
+        
+      case 's':
+        ttt.ccSetDirection('d');
+      break;
 
       case 'd':
-        ttD.ccSetMotorStatus('l');
-        break;
+        ttt.ccSetDirection('r');
+      break;
 
       case 'w':
-        ttD.ccSetMotorStatus('n');
-        break;
+        ttt.ccSetDirection('u');
+      break;
 
-      case 's':
-        ttD.ccSetMotorStatus('c');
-        break;
-
+      case 'r':
+      break;
+        
       case 'f':
-        ttD.ccSetIsOnFire(true);
-        break;
+      break;
+      
+      //-- 
 
       case ' ':
-        ttD.ccSetIsOnFire(false);
-        ttD.ccSetMotorStatus('x');
-        break;
+      break;
 
       case 'q':
         fsPover();
+        break;
+        
       default:
         break;
     }//..?
@@ -174,6 +187,62 @@ public class DemoPlantIcon extends PApplet{
     }//+++
 
   }//***
+  
+  public class EcTriangleLamp extends EcLamp{
+    
+    private char cmDirection='l';
+
+    @Override
+    protected void ccDrawLamp(int pxColor){
+      
+      pbOwner.fill(pxColor);
+      pbOwner.strokeWeight(2);
+      pbOwner.stroke(EcFactory.C_LIT_GRAY);
+      switch(cmDirection){
+        
+        case 'u':
+          pbOwner.triangle(
+            ccCenterX(), cmY,
+            ccEndX(), ccEndY(),
+            cmX, ccEndY()
+          );
+          break;
+          
+        case 'd':
+          pbOwner.triangle(
+            cmX, cmY,
+            ccEndX(), cmY,
+            ccCenterX(), ccEndY()
+          );
+          break;
+        
+        case 'l':
+          pbOwner.triangle(
+            cmX, ccCenterY(),
+            ccEndX(), cmY,
+            ccEndX(), ccEndY()
+          );
+          break;
+          
+        case 'r':
+          pbOwner.triangle(
+            cmX, cmY,
+            ccEndX(), ccCenterY(),
+            cmX, ccEndY()
+          );
+          break;
+        
+        default:break;
+      }
+      pbOwner.noStroke();
+      
+    }//+++
+    
+    public final void ccSetDirection(char pxMode_udlr){
+      cmDirection=pxMode_udlr;  
+    }//+++
+    
+  }//***
 
   public class EcStatusLamp extends EcLamp{
 
@@ -195,7 +264,7 @@ public class DemoPlantIcon extends PApplet{
     @Override
     public void ccUpdate(){
 
-      ccDrawRoundLampAtCenter(
+      ccDrawLamp(
         cmStatusColorList.get(cmStatus)
       );
       ccDrawTextAtCenter(EcFactory.C_LAMP_TEXT);
@@ -221,51 +290,189 @@ public class DemoPlantIcon extends PApplet{
   public class EcMotorIcon extends EcElement{
 
     private final int // [TODO]::make static
-      cmLampW=4,
-      cmLampH=8;
+      C_LED_W=4,
+      C_LED_H=8
+    ;
 
-    private boolean cmIsMC, cmIsAN, cmIsAL;
+    private boolean cmMC, cmAN, cmAL;
 
     public EcMotorIcon(){
       super();
 
-      cmIsMC=false;
-      cmIsAN=false;
-      cmIsAL=false;
+      cmMC=false;
+      cmAN=false;
+      cmAL=false;
 
-      ccSetSize(cmLampW*5, cmLampH+3);
+      ccSetSize(C_LED_W*5, C_LED_H+3);
 
     }//++!
 
     @Override
     public void ccUpdate(){
 
-      pbOwner.stroke(EcFactory.C_LIT);
+      pbOwner.stroke(EcFactory.C_WHITE);
       pbOwner.fill(C_SHAPE_METAL);
       pbOwner.rect(cmX, cmY, cmW, cmH, cmH/2);
       pbOwner.noStroke();
 
-      pbOwner.fill(cmIsAN?EcFactory.C_GREEN:EcFactory.C_DIM_GRAY);
-      pbOwner.rect(cmX+cmLampW*1, cmY+2, cmLampW, cmLampH);
-      pbOwner.fill(cmIsMC?EcFactory.C_ORANGE:EcFactory.C_DIM_GRAY);
-      pbOwner.rect(cmX+cmLampW*2, cmY+2, cmLampW, cmLampH);
-      pbOwner.fill(cmIsAL?EcFactory.C_RED:EcFactory.C_DIM_GRAY);
-      pbOwner.rect(cmX+cmLampW*3, cmY+2, cmLampW, cmLampH);
+      pbOwner.fill(cmAN?EcFactory.C_GREEN:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+C_LED_W*1, cmY+2, C_LED_W, C_LED_H);
+      pbOwner.fill(cmMC?EcFactory.C_ORANGE:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+C_LED_W*2, cmY+2, C_LED_W, C_LED_H);
+      pbOwner.fill(cmAL?EcFactory.C_RED:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+C_LED_W*3, cmY+2, C_LED_W, C_LED_H);
 
     }//+++
 
-    public void ccSetIsMC(boolean pxStatus){
-      cmIsMC=pxStatus;
+    public void ccSetIsContacted(boolean pxStatus){
+      cmMC=pxStatus;
     }//+++
 
-    public void ccSetIsAN(boolean pxStatus){
-      cmIsAN=pxStatus;
+    public void ccSetHasAnswer(boolean pxStatus){
+      cmAct=pxStatus;
+      cmAN=pxStatus;
     }//+++
 
-    public void ccSetIsAL(boolean pxStatus){
-      cmIsAL=pxStatus;
+    public void ccSetHasAlarm(boolean pxStatus){
+      cmAL=pxStatus;
     }//+++
 
+  }//***
+  
+  public class EcPumpIcon extends EcMotorIcon{
+    
+    private String cmDirection;
+
+    public EcPumpIcon(){
+      super();
+      cmDirection="-";
+      ccSetColor(EcFactory.C_DIM_YELLOW, EcFactory.C_DIM_GRAY);
+    }//++!
+    
+    @Override
+    public void ccUpdate(){
+      super.ccUpdate();
+      
+      pbOwner.stroke(EcFactory.C_WHITE);
+      ccActFill();
+      pbOwner.rect(cmX, cmY+cmH+1, cmW, cmH, cmH/2);
+      pbOwner.noStroke();
+      pbOwner.fill(EcFactory.C_DARK_GRAY);
+      pbOwner.text(cmDirection, cmX+5, cmY+cmH-1);
+      
+    }//***
+    
+    public final void ccSetDirection(char pxMode_lrx){
+      switch(pxMode_lrx){
+        case 'l':cmDirection="<";break;
+        case 'r':cmDirection=">";break;
+        default:cmDirection="-";break;
+      }
+    }//+++
+    
+    public final int ccPipeY(){
+      return cmY+cmH+cmH/2;
+    }//+++
+    
+  }//***
+  
+  public class EcRangedIcon extends EcElement{
+    
+    private final int//[TODO]::make static
+      C_LED_W=8,
+      C_LED_H=2
+    ;
+    
+    protected boolean 
+      cmUP,cmDN,
+      cmFAS,cmMAS,cmCAS
+    ;
+    
+    public EcRangedIcon(){
+      super();
+      cmUP=false;
+      cmDN=false;
+      cmFAS=false;
+      cmMAS=false;
+      cmCAS=false;
+      ccSetSize(C_LED_W+3,C_LED_H*3+C_LED_W*2+6);
+    }//++!
+    
+    @Override
+    public void ccUpdate(){
+      
+      pbOwner.stroke(EcFactory.C_WHITE);
+      pbOwner.fill(EcFactory.C_DARK_GRAY);
+      pbOwner.rect(cmX, cmY, cmW, cmH, cmH/2);
+      pbOwner.noStroke();
+
+      pbOwner.fill(cmFAS?EcFactory.C_GREEN:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+2, cmY+1+C_LED_W+C_LED_H*1, C_LED_W, C_LED_H);
+      pbOwner.fill(cmMAS?EcFactory.C_SKY:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+2, cmY+1+C_LED_W+C_LED_H*2, C_LED_W, C_LED_H);
+      pbOwner.fill(cmCAS?EcFactory.C_RED:EcFactory.C_DIM_GRAY);
+      pbOwner.rect(cmX+2, cmY+1+C_LED_W+C_LED_H*3, C_LED_W, C_LED_H);
+      
+      pbOwner.fill(cmUP?EcFactory.C_ORANGE:EcFactory.C_DIM_GRAY);
+      pbOwner.ellipse(ccCenterX()+1, cmY+1+C_LED_W/2, C_LED_W, C_LED_W);
+      pbOwner.fill(cmDN?EcFactory.C_ORANGE:EcFactory.C_DIM_GRAY);
+      pbOwner.ellipse(ccCenterX()+1, cmY-1+cmH-C_LED_W/2, C_LED_W, C_LED_W);
+      
+    }//+++
+    
+    public final void ccSetIsOpening(boolean pxStatus){cmUP=pxStatus;}//+++
+    public final void ccSetIsClosing(boolean pxStatus){cmDN=pxStatus;}//+++
+    public final void ccSetIsFull(boolean pxStatus){cmFAS=pxStatus;}//+++
+    public final void ccSetIsMiddle(boolean pxStatus){cmMAS=pxStatus;}//+++
+    public final void ccSetIsClosed(boolean pxStatus){cmCAS=pxStatus;}//+++
+
+  }//***
+  
+  public class EcDamperIcon extends EcRangedIcon{
+    
+    private final float C_CUT=0.2f;//[TODO]::make static
+    private final int C_GAP=2;//[TODO]::make static
+    
+    private float cmDegree;
+      
+    public EcDamperIcon(){
+      super();
+      cmDegree=0.1f;
+      ccSetSize(16, 16);
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+      pbOwner.strokeWeight(C_GAP);
+      pbOwner.stroke(EcFactory.C_LIT_GRAY);
+      pbOwner.fill(EcFactory.C_DIM_GRAY);
+      pbOwner.ellipse(cmX, cmY, cmW-1, cmH-1);
+      pbOwner.noStroke();
+      
+      pbOwner.fill(EcFactory.C_LIT_GRAY);
+      pbOwner.rectMode(CENTER);
+      pbOwner.pushMatrix();{
+        pbOwner.translate(cmX, cmY);
+        pbOwner.rotate(cmDegree);
+        pbOwner.rect(0,0, cmW+C_GAP*4, C_GAP);
+      }pbOwner.popMatrix();
+      pbOwner.rectMode(CORNER);
+      
+      pbOwner.fill(cmFAS?EcFactory.C_WHITE:EcFactory.C_DIM_GRAY);
+      pbOwner.arc(cmX,cmY,cmW-C_GAP*2,cmW-C_GAP*2,PI+C_CUT,2*PI-C_CUT,CHORD);
+      pbOwner.fill(cmCAS?EcFactory.C_RED:EcFactory.C_DIM_GRAY);
+      pbOwner.arc(cmX,cmY,cmW-C_GAP*2,cmW-C_GAP*2,C_CUT,PI-C_CUT,CHORD);
+      
+      pbOwner.fill(EcFactory.C_GRAY);
+      pbOwner.ellipse(cmX, cmY, cmW-C_GAP*5, cmH-C_GAP*5);
+    
+    }//+++
+    
+    public final void ccSetDegree(int pxPercentage){
+      cmDegree=PI*((float)pxPercentage)/200.0f;
+    }//+++
+    
   }//***
 
   //=== inner ** for plant shape
@@ -313,6 +520,29 @@ public class DemoPlantIcon extends PApplet{
     }//+++
 
   }//***
+  
+  public class EcBlowerShape extends EcShape{
+    
+    private char cmDirection='r';
+
+    @Override
+    public void ccUpdate(){
+      pbOwner.fill(cmBaseColor);
+      pbOwner.rect(cmX, cmY, cmW, cmH);
+      switch(cmDirection){
+        case 'u':pbOwner.ellipse(ccEndX(), ccEndY(), cmW*2, cmW*2);break;
+        case 'd':pbOwner.ellipse(ccEndX(), cmY, cmW*2, cmW*2);break;
+        case 'r':pbOwner.ellipse(cmX, ccEndY(), cmH*2, cmH*2);break;
+        case 'l':pbOwner.ellipse(ccEndX(), ccEndY(), cmH*2, cmH*2);break;
+        default:break;
+      }//+++
+    }//+++
+    
+    public final void ccSetDirection(char pxMode_ablr){
+      cmDirection=pxMode_ablr;
+    }//+++
+    
+  }//***
 
   //=== inner ** for plant unit
   public interface EiAbstractUnit{
@@ -320,19 +550,19 @@ public class DemoPlantIcon extends PApplet{
 
   }
 
-  public interface EiMoterizedUnit extends EiAbstractUnit{
+  public interface EiMoterized extends EiAbstractUnit{
 
-    public void ccSetMotorStatus(char pxStatus_nlx);
+    public void ccSetMotorStatus(char pxStatus_acnlx);
 
   }//***
 
-  public interface EiReversibleMoterizedUnit extends EiMoterizedUnit{
+  public interface EiReversible extends EiMoterized{
 
     abstract public void ccSetDirectionMode(char pxMode_alr);
 
   }//***
   
-  class EcMoterizedUnit extends EcElement implements EiMoterizedUnit{
+  class EcMoterizedUnit extends EcElement implements EiMoterized{
     
     EcMotorIcon cmMotor;
     
@@ -354,40 +584,40 @@ public class DemoPlantIcon extends PApplet{
       switch(pxStatus_acnlx){
         
         case 'a':
-          cmMotor.ccSetIsMC(true);
-          cmMotor.ccSetIsAN(true);
-          cmMotor.ccSetIsAL(false);
+          cmMotor.ccSetIsContacted(true);
+          cmMotor.ccSetHasAnswer(true);
+          cmMotor.ccSetHasAlarm(false);
           break;
           
         case 'c':
-          cmMotor.ccSetIsMC(true);
-          cmMotor.ccSetIsAN(false);
-          cmMotor.ccSetIsAL(false);
+          cmMotor.ccSetIsContacted(true);
+          cmMotor.ccSetHasAnswer(false);
+          cmMotor.ccSetHasAlarm(false);
           break;
           
         case 'n':
-          cmMotor.ccSetIsMC(false);
-          cmMotor.ccSetIsAN(true);
-          cmMotor.ccSetIsAL(false);
+          cmMotor.ccSetIsContacted(false);
+          cmMotor.ccSetHasAnswer(true);
+          cmMotor.ccSetHasAlarm(false);
           break;
           
         case 'l':
-          cmMotor.ccSetIsMC(false);
-          cmMotor.ccSetIsAN(false);
-          cmMotor.ccSetIsAL(true);
+          cmMotor.ccSetIsContacted(false);
+          cmMotor.ccSetHasAnswer(false);
+          cmMotor.ccSetHasAlarm(true);
           break;
         
         default:
-          cmMotor.ccSetIsMC(false);
-          cmMotor.ccSetIsAN(false);
-          cmMotor.ccSetIsAL(false);
+          cmMotor.ccSetIsContacted(false);
+          cmMotor.ccSetHasAnswer(false);
+          cmMotor.ccSetHasAlarm(false);
           break;
       }
     }//+++
     
   }//***
 
-  class EcBelconUnit extends EcElement implements EiReversibleMoterizedUnit{
+  class EcBelconUnit extends EcElement implements EiReversible{
 
     protected final EcStatusLamp cmMotorLampL;
 
@@ -468,7 +698,7 @@ public class DemoPlantIcon extends PApplet{
 
   }//***
 
-  class EcFeeder extends EcElement implements EiMoterizedUnit{
+  class EcFeeder extends EcElement implements EiMoterized{
 
     private final EcValueBox cmBox;
 
@@ -736,6 +966,112 @@ public class DemoPlantIcon extends PApplet{
     }//+++
     
     public final void ccSetMAX(int pxVal){cmTphMax=pxVal;}//+++
+    
+  }//***
+  
+  class EcFuelUnit extends EcElement implements EiMoterized{
+    
+    final int C_DUCT_THICK=4;//[TODO]make const
+    final int C_MV_LAMP_SIZE=16;
+    
+    EcPumpIcon cmPump;
+    EcTriangleLamp cmFuelPL;
+    EcTriangleLamp cmHeavyPL;
+    
+    public EcFuelUnit(String pxName, int pxX, int pxY, int pxHeadID){
+      
+      ccTakeKey(pxName);
+      ccSetLocation(pxX, pxY);
+      ccSetSize(60,30);
+      ccSetID(pxHeadID);
+      
+      cmPump=new EcPumpIcon();
+      cmPump.ccSetLocation(pxX, pxY-cmPump.ccGetH()*3/2);
+      cmPump.ccSetDirection('l');
+      
+      cmFuelPL=new EcTriangleLamp();
+      cmFuelPL.ccSetLocation
+        (ccEndX()-C_MV_LAMP_SIZE/2, cmY+2-C_MV_LAMP_SIZE/2);
+      cmFuelPL.ccSetSize(C_MV_LAMP_SIZE,C_MV_LAMP_SIZE);
+      cmFuelPL.ccSetColor(EcFactory.C_ORANGE, EcFactory.C_DIM_GRAY);
+      cmFuelPL.ccSetText(" ");
+      cmFuelPL.ccSetName("FO");
+      cmFuelPL.ccSetNameAlign('r');
+      
+      cmHeavyPL=new EcTriangleLamp();
+      cmHeavyPL.ccSetLocation
+        (ccEndX()-C_MV_LAMP_SIZE/2, ccEndY()-2-C_MV_LAMP_SIZE/2);
+      cmHeavyPL.ccSetSize(C_MV_LAMP_SIZE,C_MV_LAMP_SIZE);
+      cmHeavyPL.ccSetColor(EcFactory.C_ORANGE, EcFactory.C_DIM_GRAY);
+      cmHeavyPL.ccSetText(" ");
+      cmHeavyPL.ccSetName("HO");
+      cmHeavyPL.ccSetNameAlign('r');
+      
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+      pbOwner.fill(C_SHAPE_DUCT);
+      pbOwner.rect(cmX,cmY,cmW,C_DUCT_THICK);
+      pbOwner.rect(ccCenterX(),cmY,C_DUCT_THICK,cmH);
+      pbOwner.rect(ccCenterX(),cmY+cmH-C_DUCT_THICK,cmW/2,C_DUCT_THICK);
+      
+      cmPump.ccUpdate();
+      cmHeavyPL.ccUpdate();
+      cmFuelPL.ccUpdate();
+      
+    }//+++
+
+    @Override
+    public void ccSetMotorStatus(char pxStatus_acnlx){
+      switch(pxStatus_acnlx){
+        
+        case 'a':
+          cmPump.ccSetIsContacted(true);
+          cmPump.ccSetHasAnswer(true);
+          cmPump.ccSetHasAlarm(false);
+        break;
+          
+        case 'c':
+          cmPump.ccSetIsContacted(true);
+          cmPump.ccSetHasAnswer(false);
+          cmPump.ccSetHasAlarm(false);
+        break;
+          
+        case 'n':
+          cmPump.ccSetIsContacted(false);
+          cmPump.ccSetHasAnswer(true);
+          cmPump.ccSetHasAlarm(false);
+        break;
+          
+        case 'l':
+          cmPump.ccSetIsContacted(false);
+          cmPump.ccSetHasAnswer(false);
+          cmPump.ccSetHasAlarm(true);
+        break;
+        
+        default:
+          cmPump.ccSetIsContacted(false);
+          cmPump.ccSetHasAnswer(false);
+          cmPump.ccSetHasAlarm(false);
+        break;
+      }
+    }//+++
+    
+    public final void ccSetFuelON(boolean pxStatus){
+      cmFuelPL.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetHeavyON(boolean pxStatus){
+      cmHeavyPL.ccSetActivated(pxStatus);
+    }//+++
+    
+  }//***
+  
+  class EcBurner extends EcMoterizedUnit{
+    
+    //[HEAD]::now what?? we re working on burner!!
     
   }//***
 
