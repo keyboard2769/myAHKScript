@@ -65,9 +65,10 @@ public class DemoPlantIcon extends PApplet{
     pbRoller++;
     pbRoller&=0x0F;
     boolean lpHalsec=pbRoller<7;
-    int lpTestValue=ceil(map(mouseX, 0, width, 0, 1100));
+    int lpTestValue=ceil(map(mouseX, 0, width, -1, 300));
 
     //-- local loop
+    ttD.ccSetTPH(lpTestValue);
     ttD.ccUpdate();
 
     //-- system loop
@@ -101,9 +102,11 @@ public class DemoPlantIcon extends PApplet{
         break;
 
       case 'f':
+        ttD.ccSetIsOnFire(true);
         break;
 
       case ' ':
+        ttD.ccSetIsOnFire(false);
         ttD.ccSetMotorStatus('x');
         break;
 
@@ -654,8 +657,7 @@ public class DemoPlantIcon extends PApplet{
 
   class EcDryer extends EcMoterizedUnit{
     
-    private boolean cmIsOnFire;
-    
+    private int cmTphMax;
     
     private final EcValueBox cmKPABox;
     private final EcGauge cmTPHGauge;
@@ -666,30 +668,44 @@ public class DemoPlantIcon extends PApplet{
     ){
       
       super();
+      
+      final int C_OFFSET = 3;
+      
+      cmTphMax=320;
+      
       ccTakeKey(pxName);
       ccSetLocation(pxX, pxY);
       ccSetID(pxHeadID);
       
-      cmIsOnFire=false;
-      
+      //-- construction
       cmKPABox=new EcValueBox();
+      cmKPABox.ccSetLocation(pxX+C_OFFSET*2,pxY+C_OFFSET*2);
+      cmKPABox.ccSetText("-9999 kPa");
+      cmKPABox.ccSetSize();
       cmKPABox.ccSetValue(-20, 4);
       cmKPABox.ccSetUnit(" kPa");
-      cmKPABox.ccSetSize();
-      
-      //[HEAD]::now waht???
+      cmKPABox.ccSetTextColor(EcFactory.C_LIT_GRAY);
+      cmKPABox.ccSetColor(EcFactory.C_PUEPLE,EcFactory.C_DIM_BLUE);
       
       cmTPHGauge=new EcGauge();
+      cmTPHGauge.ccSetLocation(pxX+C_OFFSET, pxY+C_OFFSET);
+      cmTPHGauge.ccSetColor(EcFactory.C_ORANGE, EcFactory.C_DIM_GRAY);
       
       cmTPHBox=new EcValueBox();
+      cmTPHBox.ccSetLocation(cmKPABox,
+        C_OFFSET*4+cmKPABox.ccGetW(), cmKPABox.ccGetH()+C_OFFSET*2);
+      cmTPHBox.ccSetText("999 TpH");
+      cmTPHBox.ccSetSize();
+      cmTPHBox.ccSetValue(1,3);
+      cmTPHBox.ccSetUnit(" TpH");
+      cmTPHBox.ccSetColor(EcFactory.C_PUEPLE,EcFactory.C_DIM_YELLOW);
       
       //-- layout
-      ccSetSize(cmKPABox.ccGetW()*3, cmKPABox.ccGetH()*3);
-      
-      //[TEST]::delete later
-      VcConst.ccLogln("boxL", cmKPABox.ccGetW());
-      VcConst.ccLogln("all W", ccGetW());
-      VcConst.ccLogln("all H", ccGetH());
+      cmTPHGauge.ccSetEndPoint
+        (cmTPHBox.ccEndX()+C_OFFSET, cmTPHBox.ccEndY()+C_OFFSET);
+      ccSetEndPoint
+        (cmTPHGauge.ccEndX()+C_OFFSET, cmTPHGauge.ccEndY()+C_OFFSET);
+      cmMotor.ccSetLocation(cmX+C_OFFSET*2, cmY+cmH-cmMotor.ccGetH()/2);
       
     }//++!
 
@@ -698,8 +714,28 @@ public class DemoPlantIcon extends PApplet{
       
       pbOwner.fill(EcFactory.C_GRAY);
       pbOwner.rect(cmX,cmY,cmW,cmH);
+      
+      cmTPHGauge.ccUpdate();
+      cmKPABox.ccUpdate();
+      cmTPHBox.ccUpdate();
+      cmMotor.ccUpdate();
     
     }//+++
+    
+    public final void ccSetIsOnFire(boolean pxStatus){
+      cmTPHGauge.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetKPA(int pxVal){
+      cmKPABox.ccSetValue(pxVal);
+    }//+++
+    
+    public final void ccSetTPH(int pxVal){
+      cmTPHBox.ccSetValue(pxVal);
+      cmTPHGauge.ccSetPercentage(pxVal, cmTphMax);
+    }//+++
+    
+    public final void ccSetMAX(int pxVal){cmTphMax=pxVal;}//+++
     
   }//***
 
