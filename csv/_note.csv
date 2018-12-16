@@ -10,6 +10,7 @@
 ,a,,,,
 ,a,,,,
 ,a,,,,
+,a,EcPoint might need a shiftLocation(offsetX, offsetY) method,,,
 ,a,EcRect might need a setSize(EcRect) method,,,
 ,a,we need a better color set for EcFactory,ROYGSLP,,
 ,a,ccDrawRoundLampAtCenter needs seperate his color out as a parameter,by NOT using actFill(),,
