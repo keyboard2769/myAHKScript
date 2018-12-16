@@ -43,7 +43,7 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcBlowerShape ttt;
+  EcBagFilter ttt;
   
   //=== overridden
   @Override
@@ -56,9 +56,7 @@ public class DemoPlantIcon extends PApplet{
 
     //-- binding
     //-- construction
-    ttt=new EcBlowerShape();
-    ttt.ccSetLocation(100, 100);
-    ttt.ccSetSize(20, 60);
+    ttt=new EcBagFilter("nnn", 100, 100,20, 1590);
       
     
     //--post setting
@@ -72,12 +70,11 @@ public class DemoPlantIcon extends PApplet{
     pbRoller++;
     pbRoller&=0x0F;
     boolean lpHalsec=pbRoller<7;
-    int lpTestValue=ceil(map(mouseX, 0, width, 1, 99));
+    int lpTestValue=ceil(map(mouseX, 0, width, -10, 50));
 
     //-- local loop
     
-    
-    
+    ttt.ccSetCurrentFilterCount(lpTestValue);
     ttt.ccUpdate();
     
     //-- system loop
@@ -94,26 +91,36 @@ public class DemoPlantIcon extends PApplet{
   public void keyPressed(){
     switch(key){
 
-      case 'a':
-        ttt.ccSetDirection('l');
+      case 'w':
       break;
         
       case 's':
-        ttt.ccSetDirection('d');
       break;
 
+      case 'a':
+      break;
+      
       case 'd':
-        ttt.ccSetDirection('r');
-      break;
-
-      case 'w':
-        ttt.ccSetDirection('u');
       break;
 
       case 'r':
       break;
         
       case 'f':
+      break;
+      
+      //--
+      
+      case 'j':
+      break;
+        
+      case 'k':
+      break;
+      
+      case 'n':
+      break;
+        
+      case 'm':
       break;
       
       //-- 
@@ -123,10 +130,11 @@ public class DemoPlantIcon extends PApplet{
 
       case 'q':
         fsPover();
-        break;
+      break;
         
       default:
-        break;
+      break;
+      
     }//..?
   }//+++
 
@@ -139,9 +147,50 @@ public class DemoPlantIcon extends PApplet{
     exit();
   }//+++
 
-  //=== utiliry
+  //=== utility
+  
+  //=== utility ** future static
+  
+  //[TODO]::transfer to its own class[EcMotorIcon]
+  static public void ccSetMotorStatus(
+    EcMotorIcon pxTarget, char pxStatus_acnlx
+  ){
+    switch(pxStatus_acnlx){
+
+      case 'a':
+        pxTarget.ccSetIsContacted(true);
+        pxTarget.ccSetHasAnswer(true);
+        pxTarget.ccSetHasAlarm(false);
+      break;
+
+      case 'c':
+        pxTarget.ccSetIsContacted(true);
+        pxTarget.ccSetHasAnswer(false);
+        pxTarget.ccSetHasAlarm(false);
+      break;
+
+      case 'n':
+        pxTarget.ccSetIsContacted(false);
+        pxTarget.ccSetHasAnswer(true);
+        pxTarget.ccSetHasAlarm(false);
+      break;
+
+      case 'l':
+        pxTarget.ccSetIsContacted(false);
+        pxTarget.ccSetHasAnswer(false);
+        pxTarget.ccSetHasAlarm(true);
+      break;
+
+      default:
+        pxTarget.ccSetIsContacted(false);
+        pxTarget.ccSetHasAnswer(false);
+        pxTarget.ccSetHasAlarm(false);
+      break;
+    }
+  }//+++
+  
   //=== inner
-  //=== inner ** for localui
+  //=== inner ** additional localui
   public class EcValueBox extends EcTextBox{
 
     protected int cmDigit=4;
@@ -196,7 +245,6 @@ public class DemoPlantIcon extends PApplet{
     protected void ccDrawLamp(int pxColor){
       
       pbOwner.fill(pxColor);
-      pbOwner.strokeWeight(2);
       pbOwner.stroke(EcFactory.C_LIT_GRAY);
       switch(cmDirection){
         
@@ -284,6 +332,102 @@ public class DemoPlantIcon extends PApplet{
       cmStatusColorList.add(pxColor);
     }//+++
 
+  }//***
+  
+  //=== inner ** for plant shape
+  public class EcHopperShape extends EcShape{
+
+    protected int cmCut=2;
+
+    private int cmHoldLength=6;
+
+    @Override
+    public void ccUpdate(){
+
+      pbOwner.fill(cmBaseColor);
+      pbOwner.rect(cmX, cmY, cmW, cmH-cmCut);
+      pbOwner.quad(
+        cmX, cmY+cmHoldLength,
+        cmX+cmW, cmY+cmHoldLength,
+        cmX+cmW-cmCut, cmY+cmH,
+        cmX+cmCut, cmY+cmH
+      );
+
+    }//+++
+
+    public final void ccSetCut(int pxCut){
+      if(pxCut>=(cmW/2)){
+        cmCut=(cmW/2)-1;
+      }else{
+        cmCut=pxCut;
+      }
+      cmHoldLength=cmH-cmCut;
+    }//+++
+
+  }//***
+
+  public class EcBelconShape extends EcShape{
+
+    @Override
+    public void ccUpdate(){
+      pbOwner.fill(cmBaseColor);
+      pbOwner.rect(cmX, cmY, cmW, cmH, cmH/2);
+    }//++
+
+    public final void ccSetLength(int pxL){
+      cmW=pxL;
+    }//+++
+
+  }//***
+  
+  public class EcBlowerShape extends EcShape{
+    
+    private char cmDirection='r';
+
+    @Override
+    public void ccUpdate(){
+      pbOwner.fill(cmBaseColor);
+      pbOwner.rect(cmX, cmY, cmW, cmH);
+      switch(cmDirection){
+        case 'u':pbOwner.ellipse(ccEndX(), ccEndY(), cmW*2, cmW*2);break;
+        case 'd':pbOwner.ellipse(ccEndX(), cmY, cmW*2, cmW*2);break;
+        case 'r':pbOwner.ellipse(cmX, ccEndY(), cmH*2, cmH*2);break;
+        case 'l':pbOwner.ellipse(ccEndX(), ccEndY(), cmH*2, cmH*2);break;
+        default:break;
+      }//+++
+    }//+++
+    
+    public final void ccSetDirection(char pxMode_ablr){
+      cmDirection=pxMode_ablr;
+    }//+++
+    
+  }//***
+  
+  public class EcScrewShape extends EcShape{
+    
+    private final int //[TODO]::make static
+      C_SHEATH=8,
+      C_SHAFT=4
+    ;
+    
+    private int cmInCut=0,cmOutCut=0;
+
+    @Override
+    public void ccUpdate(){
+      
+      pbOwner.fill(cmBaseColor);
+      pbOwner.rect(cmX,ccCenterY()-C_SHEATH/2,cmW,C_SHEATH);
+      pbOwner.rect(cmX-C_SHAFT,ccCenterY()-C_SHAFT/2,cmW+C_SHAFT*2,C_SHAFT);
+      if(cmInCut>0){pbOwner.rect(cmX+cmInCut,cmY,C_SHAFT,cmH/2);}
+      if(cmOutCut>0){pbOwner.rect(cmX+cmOutCut,ccCenterY(),C_SHAFT,cmH/2);}
+    
+    }//+++
+    
+    public final void ccSetCut(int pxIn, int pxOut){
+      cmInCut=pxIn>=cmW?0:pxIn;
+      cmOutCut=pxOut>=cmW?0:pxOut;
+    }//+++
+    
   }//***
 
   //=== inner ** for plant icon
@@ -376,7 +520,48 @@ public class DemoPlantIcon extends PApplet{
     
   }//***
   
-  public class EcRangedIcon extends EcElement{
+  public class EcSingleSolenoidIcon extends EcElement{
+    
+    private final float C_CUT=0.2f;//[TODO]::make static
+    private final int C_GAP=2;//[TODO]::make static
+    
+    protected boolean 
+      cmUP,
+      cmFAS,cmCAS
+    ;
+    
+    public EcSingleSolenoidIcon(){
+      super();
+      ccSetSize(16, 16);
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+    
+      pbOwner.strokeWeight(C_GAP);{
+        pbOwner.stroke(EcFactory.C_LIT_GRAY);
+        pbOwner.fill(EcFactory.C_DIM_GRAY);
+        pbOwner.ellipse(cmX, cmY, cmW-1, cmH-1);
+      }pbOwner.strokeWeight(1);
+      pbOwner.noStroke();
+      
+      pbOwner.fill(cmFAS?EcFactory.C_WHITE:EcFactory.C_DIM_GRAY);
+      pbOwner.arc(cmX,cmY,cmW-C_GAP*2,cmW-C_GAP*2,PI+C_CUT,2*PI-C_CUT,CHORD);
+      pbOwner.fill(cmCAS?EcFactory.C_RED:EcFactory.C_DIM_GRAY);
+      pbOwner.arc(cmX,cmY,cmW-C_GAP*2,cmW-C_GAP*2,C_CUT,PI-C_CUT,CHORD);
+      
+      pbOwner.fill(cmUP?EcFactory.C_ORANGE:EcFactory.C_LIT_GRAY);
+      pbOwner.ellipse(cmX, cmY, cmW-C_GAP*5, cmH-C_GAP*5);
+    
+    }//+++
+    
+    public final void ccSetIsOpening(boolean pxStatus){cmUP=pxStatus;}//+++
+    public final void ccSetIsFull(boolean pxStatus){cmFAS=pxStatus;}//+++
+    public final void ccSetIsClosed(boolean pxStatus){cmCAS=pxStatus;}//+++
+    
+  }//***
+  
+  public class EcDoubleSolenoidIcon extends EcElement{
     
     private final int//[TODO]::make static
       C_LED_W=8,
@@ -388,7 +573,7 @@ public class DemoPlantIcon extends PApplet{
       cmFAS,cmMAS,cmCAS
     ;
     
-    public EcRangedIcon(){
+    public EcDoubleSolenoidIcon(){
       super();
       cmUP=false;
       cmDN=false;
@@ -428,14 +613,14 @@ public class DemoPlantIcon extends PApplet{
 
   }//***
   
-  public class EcDamperIcon extends EcRangedIcon{
+  public class EcControlMotorIcon extends EcDoubleSolenoidIcon{
     
     private final float C_CUT=0.2f;//[TODO]::make static
     private final int C_GAP=2;//[TODO]::make static
     
     private float cmDegree;
       
-    public EcDamperIcon(){
+    public EcControlMotorIcon(){
       super();
       cmDegree=0.1f;
       ccSetSize(16, 16);
@@ -444,10 +629,11 @@ public class DemoPlantIcon extends PApplet{
     @Override
     public void ccUpdate(){
       
-      pbOwner.strokeWeight(C_GAP);
-      pbOwner.stroke(EcFactory.C_LIT_GRAY);
-      pbOwner.fill(EcFactory.C_DIM_GRAY);
-      pbOwner.ellipse(cmX, cmY, cmW-1, cmH-1);
+      pbOwner.strokeWeight(C_GAP);{
+        pbOwner.stroke(EcFactory.C_LIT_GRAY);
+        pbOwner.fill(EcFactory.C_DIM_GRAY);
+        pbOwner.ellipse(cmX, cmY, cmW-1, cmH-1);
+      }pbOwner.strokeWeight(1);
       pbOwner.noStroke();
       
       pbOwner.fill(EcFactory.C_LIT_GRAY);
@@ -475,75 +661,7 @@ public class DemoPlantIcon extends PApplet{
     
   }//***
 
-  //=== inner ** for plant shape
-  public class EcHopperShape extends EcShape{
-
-    protected int cmCut=2;
-
-    private int cmHoldLength=6;
-
-    @Override
-    public void ccUpdate(){
-
-      pbOwner.fill(cmBaseColor);
-      pbOwner.rect(cmX, cmY, cmW, cmH-cmCut);
-      pbOwner.quad(
-        cmX, cmY+cmHoldLength,
-        cmX+cmW, cmY+cmHoldLength,
-        cmX+cmW-cmCut, cmY+cmH,
-        cmX+cmCut, cmY+cmH
-      );
-
-    }//+++
-
-    public final void ccSetCut(int pxCut){
-      if(pxCut>=(cmW/2)){
-        cmCut=(cmW/2)-1;
-      }else{
-        cmCut=pxCut;
-      }
-      cmHoldLength=cmH-cmCut;
-    }//+++
-
-  }//***
-
-  public class EcBelconShape extends EcShape{
-
-    @Override
-    public void ccUpdate(){
-      pbOwner.fill(cmBaseColor);
-      pbOwner.rect(cmX, cmY, cmW, cmH, cmH/2);
-    }//++
-
-    public final void ccSetLength(int pxL){
-      cmW=pxL;
-    }//+++
-
-  }//***
   
-  public class EcBlowerShape extends EcShape{
-    
-    private char cmDirection='r';
-
-    @Override
-    public void ccUpdate(){
-      pbOwner.fill(cmBaseColor);
-      pbOwner.rect(cmX, cmY, cmW, cmH);
-      switch(cmDirection){
-        case 'u':pbOwner.ellipse(ccEndX(), ccEndY(), cmW*2, cmW*2);break;
-        case 'd':pbOwner.ellipse(ccEndX(), cmY, cmW*2, cmW*2);break;
-        case 'r':pbOwner.ellipse(cmX, ccEndY(), cmH*2, cmH*2);break;
-        case 'l':pbOwner.ellipse(ccEndX(), ccEndY(), cmH*2, cmH*2);break;
-        default:break;
-      }//+++
-    }//+++
-    
-    public final void ccSetDirection(char pxMode_ablr){
-      cmDirection=pxMode_ablr;
-    }//+++
-    
-  }//***
-
   //=== inner ** for plant unit
   public interface EiAbstractUnit{
   ;
@@ -560,6 +678,12 @@ public class DemoPlantIcon extends PApplet{
 
     abstract public void ccSetDirectionMode(char pxMode_alr);
 
+  }//***
+  
+  public interface EiMultipleMoterized extends EiAbstractUnit{
+    
+    public void ccSetMotorStatus(int pxIndex, char pxStatus_acnlx);
+    
   }//***
   
   class EcMoterizedUnit extends EcElement implements EiMoterized{
@@ -581,38 +705,8 @@ public class DemoPlantIcon extends PApplet{
      */
     @Override
     public void ccSetMotorStatus(char pxStatus_acnlx){
-      switch(pxStatus_acnlx){
-        
-        case 'a':
-          cmMotor.ccSetIsContacted(true);
-          cmMotor.ccSetHasAnswer(true);
-          cmMotor.ccSetHasAlarm(false);
-          break;
-          
-        case 'c':
-          cmMotor.ccSetIsContacted(true);
-          cmMotor.ccSetHasAnswer(false);
-          cmMotor.ccSetHasAlarm(false);
-          break;
-          
-        case 'n':
-          cmMotor.ccSetIsContacted(false);
-          cmMotor.ccSetHasAnswer(true);
-          cmMotor.ccSetHasAlarm(false);
-          break;
-          
-        case 'l':
-          cmMotor.ccSetIsContacted(false);
-          cmMotor.ccSetHasAnswer(false);
-          cmMotor.ccSetHasAlarm(true);
-          break;
-        
-        default:
-          cmMotor.ccSetIsContacted(false);
-          cmMotor.ccSetHasAnswer(false);
-          cmMotor.ccSetHasAlarm(false);
-          break;
-      }
+      //[TODO]::give it back to its own class later on
+      DemoPlantIcon.ccSetMotorStatus(cmMotor, pxStatus_acnlx);
     }//+++
     
   }//***
@@ -698,6 +792,7 @@ public class DemoPlantIcon extends PApplet{
 
   }//***
 
+  //=== inner ** for plant unit ** instance depandent
   class EcFeeder extends EcElement implements EiMoterized{
 
     private final EcValueBox cmBox;
@@ -1025,38 +1120,8 @@ public class DemoPlantIcon extends PApplet{
 
     @Override
     public void ccSetMotorStatus(char pxStatus_acnlx){
-      switch(pxStatus_acnlx){
-        
-        case 'a':
-          cmPump.ccSetIsContacted(true);
-          cmPump.ccSetHasAnswer(true);
-          cmPump.ccSetHasAlarm(false);
-        break;
-          
-        case 'c':
-          cmPump.ccSetIsContacted(true);
-          cmPump.ccSetHasAnswer(false);
-          cmPump.ccSetHasAlarm(false);
-        break;
-          
-        case 'n':
-          cmPump.ccSetIsContacted(false);
-          cmPump.ccSetHasAnswer(true);
-          cmPump.ccSetHasAlarm(false);
-        break;
-          
-        case 'l':
-          cmPump.ccSetIsContacted(false);
-          cmPump.ccSetHasAnswer(false);
-          cmPump.ccSetHasAlarm(true);
-        break;
-        
-        default:
-          cmPump.ccSetIsContacted(false);
-          cmPump.ccSetHasAnswer(false);
-          cmPump.ccSetHasAlarm(false);
-        break;
-      }
+      //[TODO]::give static owner back
+      DemoPlantIcon.ccSetMotorStatus(cmPump, pxStatus_acnlx);
     }//+++
     
     public final void ccSetFuelON(boolean pxStatus){
@@ -1071,7 +1136,300 @@ public class DemoPlantIcon extends PApplet{
   
   class EcBurner extends EcMoterizedUnit{
     
-    //[HEAD]::now what?? we re working on burner!!
+    private final int 
+      C_LED_W=4,
+      C_LED_H=8
+    ;
+    
+    private boolean
+      cmIG,cmPV,cmCDS
+    ;
+    
+    private final EcBlowerShape cmBurnerShape;
+    private final EcValueBox cmDamperBox;
+    private final EcControlMotorIcon cmDamperIcon;
+    
+    public EcBurner(String pxName, int pxX, int pxY, int pxHeadID){
+      
+      super();
+      ccTakeKey(pxName);
+      ccSetLocation(pxX, pxY);
+      ccSetID(pxHeadID);
+      
+      cmIG=false;
+      cmPV=false;
+      cmCDS=false;
+      
+      cmBurnerShape = new EcBlowerShape();
+      cmBurnerShape.ccSetLocation(cmX, cmY);
+      
+      cmDamperBox=new EcValueBox();
+      cmDamperBox.ccSetLocation(cmX+2, cmY-8);
+      cmDamperBox.ccSetText("-010 %");
+      cmDamperBox.ccSetSize();
+      cmDamperBox.ccSetValue(1,3);
+      cmDamperBox.ccSetUnit(" %");
+      
+      ccSetSize(cmDamperBox.ccGetW()+8, cmDamperBox.ccGetH()+4);
+      cmBurnerShape.ccSetSize(cmW, cmH);
+      cmBurnerShape.ccSetDirection('r');
+      
+      cmDamperIcon=new EcControlMotorIcon();
+      cmDamperIcon.ccSetLocation(ccCenterX()+5,ccEndY()+cmDamperIcon.ccGetH());
+      
+      cmMotor.ccSetLocation(cmX-cmMotor.ccGetW()*3/2, cmY+cmMotor.ccGetH());
+      
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+      cmBurnerShape.ccUpdate();
+      cmDamperBox.ccUpdate();
+      cmDamperIcon.ccUpdate();
+      cmMotor.ccUpdate();
+      
+      pbOwner.fill(cmIG?EcFactory.C_YELLOW:EcFactory.C_DARK_GRAY);
+      pbOwner.rect(ccEndX()-C_LED_W*4, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
+      pbOwner.fill(cmPV?EcFactory.C_ORANGE:EcFactory.C_DARK_GRAY);
+      pbOwner.rect(ccEndX()-C_LED_W*3, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
+      pbOwner.fill(cmCDS?EcFactory.C_RED:EcFactory.C_DARK_GRAY);
+      pbOwner.rect(ccEndX()-C_LED_W*2, ccEndY()-2-C_LED_H, C_LED_W, C_LED_H);
+      
+    }//+++
+    
+    public final void ccSetDegree(int pxPercentage){
+      cmDamperBox.ccSetValue(pxPercentage);
+      cmDamperIcon.ccSetDegree(pxPercentage);
+    }//+++
+    
+    public final void ccSetIsFull(boolean pxStatus){
+      cmDamperIcon.ccSetIsFull(pxStatus);
+    }//+++
+    
+    public final void ccSetIsClosed(boolean pxStatus){
+      cmDamperIcon.ccSetIsClosed(pxStatus);
+    }//+++
+    
+    public final void ccSetIsIgniting(boolean pxStatus){cmIG=pxStatus;}//+++
+    public final void ccSetIsPiloting(boolean pxStatus){cmPV=pxStatus;}//+++
+    public final void ccSetHasFire(boolean pxStatus){cmCDS=pxStatus;}//+++
+    
+  }//***
+  
+  class EcBagFilter extends EcElement implements EiMultipleMoterized{
+    
+    private final int //[TODO]::make static
+      C_BAG_CUT=30,
+      C_COARSE_CUT=15,
+      //--
+      C_FILTER_W=3,
+      C_FILTER_H=18,
+      C_FILTER_GAP=2
+    ;//...
+    
+    public final int //[TODO]::make static
+      C_M_BAG_SCREW=0,
+      C_M_COARSE_SCREW=1
+    ;//...
+    
+    private int cmFilterCount;
+    private int cmCurrentCount;
+    
+    private final EcHopperShape cmBag;
+    private final EcHopperShape cmCoarse;
+    private final EcScrewShape cmBagScrew;
+    private final EcScrewShape cmCoarseScrew;
+    private final EcLamp cmBagUpperLV;
+    private final EcLamp cmBagLowerLV;
+    private final EcSingleSolenoidIcon cmCoolingDamper;
+    private final EcMotorIcon cmBagScrewMotor;
+    private final EcMotorIcon cmCoarseScrewMotor;
+    private final EcTriangleLamp cmToDustFeederPL;
+    private final EcTriangleLamp cmToDustExtractionPL;
+    private final EcValueBox cmEntranceTemrature;
+
+    public EcBagFilter(
+      String pxName, int pxX, int pxY,int pxFilterCount, int pxHeadID
+    ){
+      
+      super();
+      ccTakeKey(pxName);
+      ccSetLocation(pxX, pxY);
+      ccSetSize(150,100);//[TODO]::width should be as long as V dryer
+      ccSetID(pxHeadID);
+      
+      cmFilterCount=pxFilterCount;
+      cmCurrentCount=0;
+      
+      cmBag=new EcHopperShape();
+      cmBag.ccSetLocation(cmX, cmY);
+      cmBag.ccSetSize(cmW-C_BAG_CUT, cmH-C_BAG_CUT);
+      cmBag.ccSetBaseColor(C_SHAPE_METAL);
+      cmBag.ccSetCut(C_BAG_CUT);
+      
+      cmCoarse=new EcHopperShape();
+      cmCoarse.ccSetLocation(ccEndX()-C_BAG_CUT, cmY+C_COARSE_CUT);
+      cmCoarse.ccSetSize(C_BAG_CUT,cmH-C_COARSE_CUT*2);
+      cmCoarse.ccSetBaseColor(C_SHAPE_METAL);
+      cmCoarse.ccSetCut(C_COARSE_CUT);
+      
+      cmBagScrew=new EcScrewShape();
+      cmBagScrew.ccSetLocation(cmBag, 0,2);
+      cmBagScrew.ccShiftLocation(C_BAG_CUT/2, 0);
+      cmBagScrew.ccSetSize(cmBag.ccGetW()-C_BAG_CUT, 12);
+      cmBagScrew.ccSetCut(C_BAG_CUT, -1);
+      
+      cmCoarseScrew=new EcScrewShape();
+      cmCoarseScrew.ccSetLocation(ccCenterX()-2, cmCoarse.ccEndY()+2);
+      cmCoarseScrew.ccSetSize(cmW/2, 24);
+      cmCoarseScrew.ccSetCut(cmW/2-C_COARSE_CUT, 0);
+      
+      cmBagUpperLV=new EcLamp();
+      cmBagUpperLV.ccSetLocation(cmX+C_BAG_CUT/2, cmBag.ccEndY()-C_BAG_CUT);
+      cmBagUpperLV.ccSetSize(12, 12);
+      cmBagUpperLV.ccSetName("F2H");
+      cmBagUpperLV.ccSetNameAlign('l');
+      cmBagUpperLV.ccSetText(" ");
+      cmBagUpperLV.ccSetColor(EcFactory.C_LIT_GREEN);
+      
+      cmBagLowerLV=new EcLamp();
+      cmBagLowerLV.ccSetLocation(cmBagUpperLV,15,15);
+      cmBagLowerLV.ccSetSize(12, 12);
+      cmBagLowerLV.ccSetName("F2H");
+      cmBagLowerLV.ccSetNameAlign('l');
+      cmBagLowerLV.ccSetText(" ");
+      cmBagLowerLV.ccSetColor(EcFactory.C_LIT_GREEN);
+      
+      cmCoolingDamper=new EcSingleSolenoidIcon();
+      cmCoolingDamper.ccSetLocation(ccEndX(), cmY+C_COARSE_CUT);
+      
+      cmBagScrewMotor=new EcMotorIcon();
+      cmBagScrewMotor.ccSetLocation
+        (cmBagScrew.ccEndX()-30, cmBagScrew.ccCenterY()-4);
+      
+      cmCoarseScrewMotor=new EcMotorIcon();
+      cmCoarseScrewMotor.ccSetLocation
+        (cmCoarseScrew.ccEndX()-20, cmCoarseScrew.ccCenterY()-2);
+      
+      cmToDustFeederPL = new EcTriangleLamp();
+      cmToDustFeederPL.ccSetDirection('l');
+      cmToDustFeederPL.ccSetName("DF");
+      cmToDustFeederPL.ccSetNameAlign('b');
+      cmToDustFeederPL.ccSetText(" ");
+      cmToDustFeederPL.ccSetColor(EcFactory.C_ORANGE);
+      cmToDustFeederPL.ccSetSize(8,8);
+      cmToDustFeederPL.ccSetLocation
+        (cmBagScrew.ccGetX()-18  , cmBagScrew.ccCenterY()-4);
+      
+      cmToDustExtractionPL = new EcTriangleLamp();
+      cmToDustExtractionPL.ccSetDirection('r');
+      cmToDustExtractionPL.ccSetName("DE");
+      cmToDustExtractionPL.ccSetNameAlign('b');
+      cmToDustExtractionPL.ccSetText(" ");
+      cmToDustExtractionPL.ccSetColor(EcFactory.C_ORANGE);
+      cmToDustExtractionPL.ccSetSize(8,8);
+      cmToDustExtractionPL.ccSetLocation
+        (cmBagScrew.ccEndX()+8  , cmBagScrew.ccCenterY()-4);
+      
+      cmEntranceTemrature = new EcValueBox();
+      cmEntranceTemrature.ccSetText("-123'c");
+      cmEntranceTemrature.ccSetSize();
+      cmEntranceTemrature.ccSetValue(37,3);
+      cmEntranceTemrature.ccSetUnit("'c");
+      cmEntranceTemrature.ccSetColor(EcFactory.C_PUEPLE, EcFactory.C_DIM_RED);
+      cmEntranceTemrature.ccSetTextColor(EcFactory.C_LIT_GRAY);
+      cmEntranceTemrature.ccSetLocation(cmCoarse,5,C_COARSE_CUT);
+      
+    }//+++
+
+    @Override
+    public void ccUpdate(){
+      
+      cmBag.ccUpdate();
+      cmCoarse.ccUpdate();
+      cmBagScrew.ccUpdate();
+      cmCoarseScrew.ccUpdate();
+      cmBagUpperLV.ccUpdate();
+      cmBagLowerLV.ccUpdate();
+      cmCoolingDamper.ccUpdate();
+      cmBagScrewMotor.ccUpdate();
+      cmCoarseScrewMotor.ccUpdate();
+      cmToDustFeederPL.ccUpdate();
+      cmToDustExtractionPL.ccUpdate();
+      cmEntranceTemrature.ccUpdate();
+      
+      for(int i=0;i<cmFilterCount;i++){
+        pbOwner.fill(cmCurrentCount==i?
+          EcFactory.C_LIT_ORANGE:EcFactory.C_DARK_GRAY
+        );
+        pbOwner.rect(
+          cmX+C_FILTER_GAP*2+(C_FILTER_GAP+C_FILTER_W)*i,
+          cmY+C_FILTER_GAP*2,
+          C_FILTER_W,C_FILTER_H
+        );
+      }
+      
+    }//+++
+    
+    @Override
+    public void ccSetMotorStatus(int pxIndex, char pxStatus_acnlx){
+      
+      switch(pxIndex){
+        
+        case C_M_BAG_SCREW:
+          //[TODO]::chager the static owner lator
+          DemoPlantIcon.ccSetMotorStatus(cmBagScrewMotor, pxStatus_acnlx);
+        break;
+        
+        case C_M_COARSE_SCREW:
+          //[TODO]::chager the static owner lator
+          DemoPlantIcon.ccSetMotorStatus(cmCoarseScrewMotor, pxStatus_acnlx);
+        break;
+        
+      }//..?
+      
+    }//+++
+    
+    public void ccSetCoolingDamoerStatus(char pxTarget_soc,boolean pxStatus){
+      switch(pxTarget_soc){
+        case 's':cmCoolingDamper.ccSetIsOpening(pxStatus);break;
+        case 'o':cmCoolingDamper.ccSetIsFull(pxStatus);break;
+        case 'c':cmCoolingDamper.ccSetIsClosed(pxStatus);break;
+      }
+    }//+++
+    
+    public void ccSetEntranceTemprature(int pxVal){
+      cmEntranceTemrature.ccSetValue(pxVal);
+    }//+++
+    
+    public void ccSetBagLevelerStatus(char pxTarget_hl,boolean pxStatus){
+      switch(pxTarget_hl){
+        case 'h':cmBagUpperLV.ccSetActivated(pxStatus);break;
+        case 'l':cmBagLowerLV.ccSetActivated(pxStatus);break;
+      }
+    }//+++
+    
+    public void ccSetDustFlow(char pxTarget_ef,boolean pxStatus){
+      switch(pxTarget_ef){
+        case 'e':cmToDustExtractionPL.ccSetActivated(pxStatus);break;
+        case 'f':cmToDustFeederPL.ccSetActivated(pxStatus);break;
+      }
+    }//+++
+    
+    public void ccSetCurrentFilterCount(int pxCount){
+      cmCurrentCount=pxCount;
+    }//+++
+    
+    public void ccSetFilterCount(int pxCount){
+      cmFilterCount=pxCount;
+    }//+++
+
+  }//***
+  
+  class EcExhaustFan {
+    
+    //[HEAD]::what now??
     
   }//***
 
