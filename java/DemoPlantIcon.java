@@ -43,7 +43,7 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcBagFilter ttt;
+  EcExhaustFan ttt;
   
   //=== overridden
   @Override
@@ -56,7 +56,7 @@ public class DemoPlantIcon extends PApplet{
 
     //-- binding
     //-- construction
-    ttt=new EcBagFilter("nnn", 100, 100,20, 1590);
+    ttt=new EcExhaustFan("nnn", 100, 100, 1590);
       
     
     //--post setting
@@ -74,7 +74,6 @@ public class DemoPlantIcon extends PApplet{
 
     //-- local loop
     
-    ttt.ccSetCurrentFilterCount(lpTestValue);
     ttt.ccUpdate();
     
     //-- system loop
@@ -397,8 +396,8 @@ public class DemoPlantIcon extends PApplet{
       }//+++
     }//+++
     
-    public final void ccSetDirection(char pxMode_ablr){
-      cmDirection=pxMode_ablr;
+    public final void ccSetDirection(char pxMode_udlr){
+      cmDirection=pxMode_udlr;
     }//+++
     
   }//***
@@ -593,7 +592,7 @@ public class DemoPlantIcon extends PApplet{
 
       pbOwner.fill(cmFAS?EcFactory.C_GREEN:EcFactory.C_DIM_GRAY);
       pbOwner.rect(cmX+2, cmY+1+C_LED_W+C_LED_H*1, C_LED_W, C_LED_H);
-      pbOwner.fill(cmMAS?EcFactory.C_SKY:EcFactory.C_DIM_GRAY);
+      pbOwner.fill(cmMAS?EcFactory.C_WATER:EcFactory.C_DIM_GRAY);
       pbOwner.rect(cmX+2, cmY+1+C_LED_W+C_LED_H*2, C_LED_W, C_LED_H);
       pbOwner.fill(cmCAS?EcFactory.C_RED:EcFactory.C_DIM_GRAY);
       pbOwner.rect(cmX+2, cmY+1+C_LED_W+C_LED_H*3, C_LED_W, C_LED_H);
@@ -1010,7 +1009,7 @@ public class DemoPlantIcon extends PApplet{
       cmKPABox.ccSetValue(-20, 4);
       cmKPABox.ccSetUnit(" kPa");
       cmKPABox.ccSetTextColor(EcFactory.C_LIT_GRAY);
-      cmKPABox.ccSetColor(EcFactory.C_PUEPLE,EcFactory.C_DIM_BLUE);
+      cmKPABox.ccSetColor(EcFactory.C_PURPLE,EcFactory.C_DIM_BLUE);
       
       cmTPHGauge=new EcGauge();
       cmTPHGauge.ccSetLocation(pxX+C_OFFSET, pxY+C_OFFSET);
@@ -1023,7 +1022,7 @@ public class DemoPlantIcon extends PApplet{
       cmTPHBox.ccSetSize();
       cmTPHBox.ccSetValue(1,3);
       cmTPHBox.ccSetUnit(" TpH");
-      cmTPHBox.ccSetColor(EcFactory.C_PUEPLE,EcFactory.C_DIM_YELLOW);
+      cmTPHBox.ccSetColor(EcFactory.C_PURPLE,EcFactory.C_DIM_YELLOW);
       
       //-- layout
       cmTPHGauge.ccSetEndPoint
@@ -1337,7 +1336,7 @@ public class DemoPlantIcon extends PApplet{
       cmEntranceTemrature.ccSetSize();
       cmEntranceTemrature.ccSetValue(37,3);
       cmEntranceTemrature.ccSetUnit("'c");
-      cmEntranceTemrature.ccSetColor(EcFactory.C_PUEPLE, EcFactory.C_DIM_RED);
+      cmEntranceTemrature.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DIM_RED);
       cmEntranceTemrature.ccSetTextColor(EcFactory.C_LIT_GRAY);
       cmEntranceTemrature.ccSetLocation(cmCoarse,5,C_COARSE_CUT);
       
@@ -1427,9 +1426,61 @@ public class DemoPlantIcon extends PApplet{
 
   }//***
   
-  class EcExhaustFan {
+  class EcExhaustFan extends EcMoterizedUnit{
     
-    //[HEAD]::what now??
+    private final int //[TODO]::make static
+      C_DUCT_THICK=8,
+      C_DUCT_GAP=4
+    ;//...
+    
+    private final EcBlowerShape cmFanShape;
+    
+    public EcExhaustFan(String pxName, int pxX, int pxY, int pxHeadID){
+
+      super();
+      ccTakeKey(pxName);
+      ccSetLocation(pxX,pxY);
+      ccSetID(pxHeadID);
+      ccSetSize(C_DUCT_THICK*7, C_DUCT_THICK*12);
+      
+      cmFanShape = new EcBlowerShape();
+      cmFanShape.ccSetLocation(cmX, cmY+C_DUCT_THICK*8);
+      cmFanShape.ccSetSize(C_DUCT_THICK*2, C_DUCT_THICK*4);
+      cmFanShape.ccSetDirection('u');
+        
+      
+      
+      //[HEAD]::what now??
+      
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+      pbOwner.fill(EcFactory.C_DARK_RED);
+      pbOwner.rect(cmX, cmY, cmW, cmH);
+      
+      pbOwner.fill(C_SHAPE_METAL);
+      pbOwner.rect(cmX, cmY, C_DUCT_THICK*2, C_DUCT_THICK*8-C_DUCT_GAP);
+      pbOwner.rect(ccEndX()-C_DUCT_THICK, ccCenterY(), C_DUCT_THICK, cmH/2);
+      
+      int lpFanEnd=cmFanShape.ccGetW()*2+C_DUCT_GAP;
+      pbOwner.rect(cmX+lpFanEnd, ccEndY(), cmW-lpFanEnd, C_DUCT_THICK);
+      
+      //[HEAD]::what now ???
+      
+      cmFanShape.ccUpdate();
+      
+    }//***
+    
+    //[TOIMP]
+    public final void ccSetDegree(){}//+++
+    //[TOIMP]
+    public final void ccSetIsFull(){}//+++
+    //[TOIMP]
+    public final void ccSetIsClosed(){}//+++
+    //[TOIMP]
+    public final void ccSetHasPressure(){}//+++
     
   }//***
 
