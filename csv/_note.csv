@@ -4,7 +4,7 @@
 ,,,,,
 ,,,,,
 ,,,,,
-,t,Name it ,"des1,des2,des3@tag1 -param1 -param2 @tag2 -param3" -param4,,
+,t,Name it @tag -p1 -p2 @tag -p3 -p4,"des1,des2,des3",,
 ,,,,,
 ,a,,,,
 ,a,,,,
