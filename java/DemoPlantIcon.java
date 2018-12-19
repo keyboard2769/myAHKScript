@@ -70,9 +70,16 @@ public class DemoPlantIcon extends PApplet{
     pbRoller++;
     pbRoller&=0x0F;
     boolean lpHalsec=pbRoller<7;
-    int lpTestValue=ceil(map(mouseX, 0, width, -10, 50));
+    int lpTestValue=ceil(map(mouseX, 0, width, 1, 99));
 
     //-- local loop
+    
+    ttt.ccSetIsFull(false);
+    ttt.ccSetIsClosed(false);
+    if(lpTestValue<5){ttt.ccSetIsClosed(true);}
+    if(lpTestValue>95){ttt.ccSetIsFull(true);}
+    ttt.ccSetDegree(lpTestValue);
+    
     
     ttt.ccUpdate();
     
@@ -97,15 +104,18 @@ public class DemoPlantIcon extends PApplet{
       break;
 
       case 'a':
+        ttt.ccSetMotorStatus('a');
       break;
       
       case 'd':
+        ttt.ccSetMotorStatus('l');
       break;
 
       case 'r':
       break;
         
       case 'f':
+        ttt.ccSetHasPressure(true);
       break;
       
       //--
@@ -1133,6 +1143,25 @@ public class DemoPlantIcon extends PApplet{
     
   }//***
   
+  class EcGasUnit extends EcElement {
+    
+    private boolean 
+      cmHGP,cmLGP,cmLEAK,cmLEAKL,
+      cmMVA,cmMVB
+    ;//...
+    
+    public EcGasUnit(String pxName, int pxX, int pxY, int pxHeadID){
+      
+      //[HEAD]::WHAT NOW???!
+      
+    }//++!
+    
+    
+    //[TOIMP]::
+    public final void ccSet(){}//+++
+    
+  }//***
+  
   class EcBurner extends EcMoterizedUnit{
     
     private final int 
@@ -1145,7 +1174,7 @@ public class DemoPlantIcon extends PApplet{
     ;
     
     private final EcBlowerShape cmBurnerShape;
-    private final EcValueBox cmDamperBox;
+    private final EcValueBox cmDegreeBox;
     private final EcControlMotorIcon cmDamperIcon;
     
     public EcBurner(String pxName, int pxX, int pxY, int pxHeadID){
@@ -1162,14 +1191,16 @@ public class DemoPlantIcon extends PApplet{
       cmBurnerShape = new EcBlowerShape();
       cmBurnerShape.ccSetLocation(cmX, cmY);
       
-      cmDamperBox=new EcValueBox();
-      cmDamperBox.ccSetLocation(cmX+2, cmY-8);
-      cmDamperBox.ccSetText("-010 %");
-      cmDamperBox.ccSetSize();
-      cmDamperBox.ccSetValue(1,3);
-      cmDamperBox.ccSetUnit(" %");
+      cmDegreeBox=new EcValueBox();
+      cmDegreeBox.ccSetLocation(cmX+2, cmY-8);
+      cmDegreeBox.ccSetText("-010%");
+      cmDegreeBox.ccSetSize();
+      cmDegreeBox.ccSetValue(1,3);
+      cmDegreeBox.ccSetUnit("%");
+      cmDegreeBox.ccSetTextColor(EcFactory.C_LIT_GRAY);
+      cmDegreeBox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DARK_GREEN);
       
-      ccSetSize(cmDamperBox.ccGetW()+8, cmDamperBox.ccGetH()+4);
+      ccSetSize(cmDegreeBox.ccGetW()+8, cmDegreeBox.ccGetH()+4);
       cmBurnerShape.ccSetSize(cmW, cmH);
       cmBurnerShape.ccSetDirection('r');
       
@@ -1184,7 +1215,7 @@ public class DemoPlantIcon extends PApplet{
     public void ccUpdate(){
       
       cmBurnerShape.ccUpdate();
-      cmDamperBox.ccUpdate();
+      cmDegreeBox.ccUpdate();
       cmDamperIcon.ccUpdate();
       cmMotor.ccUpdate();
       
@@ -1198,7 +1229,7 @@ public class DemoPlantIcon extends PApplet{
     }//+++
     
     public final void ccSetDegree(int pxPercentage){
-      cmDamperBox.ccSetValue(pxPercentage);
+      cmDegreeBox.ccSetValue(pxPercentage);
       cmDamperIcon.ccSetDegree(pxPercentage);
     }//+++
     
@@ -1434,6 +1465,10 @@ public class DemoPlantIcon extends PApplet{
     ;//...
     
     private final EcBlowerShape cmFanShape;
+    private final EcLamp cmPressurePL;
+    private final EcControlMotorIcon cmDamper;
+    private final EcValueBox cmDegreeBox;
+    
     
     public EcExhaustFan(String pxName, int pxX, int pxY, int pxHeadID){
 
@@ -1446,19 +1481,34 @@ public class DemoPlantIcon extends PApplet{
       cmFanShape = new EcBlowerShape();
       cmFanShape.ccSetLocation(cmX, cmY+C_DUCT_THICK*8);
       cmFanShape.ccSetSize(C_DUCT_THICK*2, C_DUCT_THICK*4);
+      cmFanShape.ccSetBaseColor(C_SHAPE_DUCT);
       cmFanShape.ccSetDirection('u');
         
+      cmPressurePL = new EcLamp();
+      cmPressurePL.ccSetLocation(cmFanShape, -8, 10);
+      cmPressurePL.ccSetSize(16,16);
+      cmPressurePL.ccSetText("L");
+      cmPressurePL.ccSetColor(EcFactory.C_LIT_GREEN);
       
+      cmDamper = new EcControlMotorIcon();
+      cmDamper.ccSetLocation(ccEndX()-3*C_DUCT_THICK+3, ccEndY()+3);
       
-      //[HEAD]::what now??
+      cmDegreeBox = new EcValueBox();
+      cmDegreeBox.ccSetText("-099%");
+      cmDegreeBox.ccSetSize();
+      cmDegreeBox.ccSetValue(1,3);
+      cmDegreeBox.ccSetUnit("%");
+      cmDegreeBox.ccSetTextColor(EcFactory.C_LIT_GRAY);
+      cmDegreeBox.ccSetLocation(cmFanShape, 0, C_DUCT_THICK*5/2);
+      cmDegreeBox.ccSetTextColor(EcFactory.C_LIT_GRAY);
+      cmDegreeBox.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_DARK_GREEN);
+      
+      cmMotor.ccSetLocation(cmFanShape,4, C_DUCT_THICK*7/2);
       
     }//++!
 
     @Override
     public void ccUpdate(){
-      
-      pbOwner.fill(EcFactory.C_DARK_RED);
-      pbOwner.rect(cmX, cmY, cmW, cmH);
       
       pbOwner.fill(C_SHAPE_METAL);
       pbOwner.rect(cmX, cmY, C_DUCT_THICK*2, C_DUCT_THICK*8-C_DUCT_GAP);
@@ -1467,20 +1517,34 @@ public class DemoPlantIcon extends PApplet{
       int lpFanEnd=cmFanShape.ccGetW()*2+C_DUCT_GAP;
       pbOwner.rect(cmX+lpFanEnd, ccEndY(), cmW-lpFanEnd, C_DUCT_THICK);
       
-      //[HEAD]::what now ???
-      
       cmFanShape.ccUpdate();
+      cmPressurePL.ccUpdate();
+      cmDamper.ccUpdate();
+      cmDegreeBox.ccUpdate();
+      cmMotor.ccUpdate();
       
     }//***
     
-    //[TOIMP]
-    public final void ccSetDegree(){}//+++
-    //[TOIMP]
-    public final void ccSetIsFull(){}//+++
-    //[TOIMP]
-    public final void ccSetIsClosed(){}//+++
-    //[TOIMP]
-    public final void ccSetHasPressure(){}//+++
+    /**
+     * NOT constrainning, dont get over. 
+     * @param pxVal 0-100
+     */
+    public final void ccSetDegree(int pxVal){
+      cmDegreeBox.ccSetValue(pxVal);
+      cmDamper.ccSetDegree(pxVal);
+    }//+++
+    
+    public final void ccSetIsFull(boolean pxStatus){
+      cmDamper.ccSetIsFull(pxStatus);
+    }//+++
+    
+    public final void ccSetIsClosed(boolean pxStatus){
+      cmDamper.ccSetIsClosed(pxStatus);
+    }//+++
+    
+    public final void ccSetHasPressure(boolean pxStatus){
+      cmPressurePL.ccSetActivated(pxStatus);
+    }//+++
     
   }//***
 
