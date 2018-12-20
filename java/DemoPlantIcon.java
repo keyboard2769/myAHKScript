@@ -43,7 +43,7 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcExhaustFan ttt;
+  EcGasUnit ttt;
   
   //=== overridden
   @Override
@@ -56,7 +56,7 @@ public class DemoPlantIcon extends PApplet{
 
     //-- binding
     //-- construction
-    ttt=new EcExhaustFan("nnn", 100, 100, 1590);
+    ttt=new EcGasUnit("nnn", 100, 100, 1590);
       
     
     //--post setting
@@ -74,11 +74,18 @@ public class DemoPlantIcon extends PApplet{
 
     //-- local loop
     
-    ttt.ccSetIsFull(false);
-    ttt.ccSetIsClosed(false);
-    if(lpTestValue<5){ttt.ccSetIsClosed(true);}
-    if(lpTestValue>95){ttt.ccSetIsFull(true);}
-    ttt.ccSetDegree(lpTestValue);
+    //    ttt.ccSetIsFull(false);
+    //    ttt.ccSetIsClosed(false);
+    //    if(lpTestValue<5){ttt.ccSetIsClosed(true);}
+    //    if(lpTestValue>95){ttt.ccSetIsFull(true);}
+    //    ttt.ccSetDegree(lpTestValue);
+    
+    ttt.ccSetIsLeakHI(lpHalsec);
+    ttt.ccSetIsLeakLO(!lpHalsec);
+    ttt.ccSetIsPressureHI(lpHalsec);
+    ttt.ccSetIsPressureLO(!lpHalsec);
+    ttt.ccSetIsValveAOpen(lpHalsec);
+    ttt.ccSetIsValveBOpen(!lpHalsec);
     
     
     ttt.ccUpdate();
@@ -104,18 +111,20 @@ public class DemoPlantIcon extends PApplet{
       break;
 
       case 'a':
-        ttt.ccSetMotorStatus('a');
+        //ttt.ccSetMotorStatus('a');
+        
       break;
       
       case 'd':
-        ttt.ccSetMotorStatus('l');
+        //ttt.ccSetMotorStatus('l');
+        
       break;
 
       case 'r':
       break;
         
       case 'f':
-        ttt.ccSetHasPressure(true);
+        
       break;
       
       //--
@@ -669,7 +678,6 @@ public class DemoPlantIcon extends PApplet{
     }//+++
     
   }//***
-
   
   //=== inner ** for plant unit
   public interface EiAbstractUnit{
@@ -1145,20 +1153,135 @@ public class DemoPlantIcon extends PApplet{
   
   class EcGasUnit extends EcElement {
     
+    final int C_DUCT_THICK=4;//[TODO]make const
+    
+    private final int //[TODO]make const
+      C_LED_W=8,
+      C_LED_H=4
+    ;
+    
     private boolean 
-      cmHGP,cmLGP,cmLEAK,cmLEAKL,
-      cmMVA,cmMVB
+      cmIsLeakingHigh,cmIsLeakingLow
     ;//...
+    
+    private final EcBelconShape cmGasUnitShape;
+    private final EcLamp cmGasPressureHI;
+    private final EcLamp cmGasPressureLO;
+    private final EcTriangleLamp cmGasValveA;
+    private final EcTriangleLamp cmGasValveB;
     
     public EcGasUnit(String pxName, int pxX, int pxY, int pxHeadID){
       
-      //[HEAD]::WHAT NOW???!
+      super();
+      ccTakeKey(pxName);
+      ccSetLocation(pxX,pxY);
+      ccSetSize(65,20);
+      ccSetID(pxHeadID);
+      
+      cmIsLeakingHigh=false;
+      cmIsLeakingLow=false;
+      
+      cmGasUnitShape = new EcBelconShape();
+      cmGasUnitShape.ccSetLocation(cmX+16, ccEndY()-6);
+      cmGasUnitShape.ccSetSize(32, 16);
+      cmGasUnitShape.ccSetBaseColor(C_SHAPE_METAL);
+      
+      cmGasPressureHI=new EcLamp();
+      cmGasPressureHI.ccSetLocation(cmX-5, cmY-6);
+      cmGasPressureHI.ccSetSize(12, 12);
+      cmGasPressureHI.ccSetText(" ");
+      cmGasPressureHI.ccSetName("Hi");
+      cmGasPressureHI.ccSetNameAlign('a');
+      cmGasPressureHI.ccSetColor(EcFactory.C_PURPLE);
+      
+      cmGasPressureLO=new EcLamp();
+      cmGasPressureLO.ccSetLocation(ccEndX()-6, ccEndY()-5);
+      cmGasPressureLO.ccSetSize(12, 12);
+      cmGasPressureLO.ccSetText(" ");
+      cmGasPressureLO.ccSetName("Lo");
+      cmGasPressureLO.ccSetNameAlign('r');
+      cmGasPressureLO.ccSetColor(EcFactory.C_PURPLE);
+      
+      cmGasValveA=new EcTriangleLamp();
+      cmGasValveA.ccSetLocation(cmGasUnitShape,17,-14);
+      cmGasValveA.ccSetSize(8,8);
+      cmGasValveA.ccSetText(" ");
+      cmGasValveA.ccSetName("A");
+      cmGasValveA.ccSetNameAlign('a');
+      cmGasValveA.ccSetDirection('d');
+      cmGasValveA.ccSetColor(EcFactory.C_ORANGE);
+      
+      cmGasValveB=new EcTriangleLamp();
+      cmGasValveB.ccSetLocation(cmGasUnitShape,1,-14);
+      cmGasValveB.ccSetSize(8,8);
+      cmGasValveB.ccSetText(" ");
+      cmGasValveB.ccSetName("B");
+      cmGasValveB.ccSetNameAlign('a');
+      cmGasValveB.ccSetDirection('d');
+      cmGasValveB.ccSetColor(EcFactory.C_ORANGE);
       
     }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+      //-- gas pipe
+      pbOwner.fill(C_SHAPE_DUCT);
+      pbOwner.rect(cmX,cmY,C_DUCT_THICK,cmH);
+      pbOwner.rect(cmX,ccEndY(),cmW,C_DUCT_THICK);
+      
+      //-- gas unit shape
+      pbOwner.stroke(EcFactory.C_LIT_GRAY);
+      cmGasUnitShape.ccUpdate();
+      pbOwner.noStroke();
+      
+      //-- pressure switch
+      pbOwner.fill(cmIsLeakingHigh?
+        EcFactory.C_LIT_GREEN:EcFactory.C_BLACK
+      );
+      pbOwner.rect(
+        cmGasUnitShape.ccGetX()+8, cmGasUnitShape.ccGetY()+4,
+        C_LED_W, C_LED_H
+      );      
+      pbOwner.fill(cmIsLeakingLow?
+        EcFactory.C_LIT_YELLOW:EcFactory.C_BLACK
+      );
+      pbOwner.rect(
+        cmGasUnitShape.ccGetX()+8, cmGasUnitShape.ccGetY()+C_LED_H+6,
+        C_LED_W, C_LED_H
+      );
+      
+      //-- elements
+      cmGasPressureHI.ccUpdate();
+      cmGasPressureLO.ccUpdate();
+      cmGasValveA.ccUpdate();
+      cmGasValveB.ccUpdate();
+      
+    }//+++
     
+    public final void ccSetIsPressureHI(boolean pxStatus){
+      cmGasPressureHI.ccSetActivated(pxStatus);
+    }//+++
     
-    //[TOIMP]::
-    public final void ccSet(){}//+++
+    public final void ccSetIsPressureLO(boolean pxStatus){
+      cmGasPressureLO.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetIsLeakHI(boolean pxStatus){
+      cmIsLeakingHigh=pxStatus;
+    }//+++
+    
+    public final void ccSetIsLeakLO(boolean pxStatus){
+      cmIsLeakingLow=pxStatus;
+    }//+++
+    
+    public final void ccSetIsValveAOpen(boolean pxStatus){
+      cmGasValveA.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetIsValveBOpen(boolean pxStatus){
+      cmGasValveB.ccSetActivated(pxStatus);
+    }//+++
     
   }//***
   
@@ -1547,6 +1670,25 @@ public class DemoPlantIcon extends PApplet{
     }//+++
     
   }//***
+  
+  class EcHotTower extends EcElement{
+    
+    //[HEAD]::what ever
+    
+  }//***
+  
+  //class EcDustSilo
+  //class EcDustMixer
+  //class EcFillerSilo
+  //class EcMixer
+  //class EcCobHopper
+  
+  //class EcColdElevator 
+  //class EcRSurgeBin
+  //class EcRExhaustFan
+  
+  //class EcOnePathSkip
+  //class EcMixtureSilo
 
   //=== entry
   static public void main(String[] passedArgs){
