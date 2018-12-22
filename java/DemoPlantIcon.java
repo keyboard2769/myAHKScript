@@ -43,7 +43,7 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcHotTower ttt;
+  EcMixer ttt;
   
   //=== overridden
   @Override
@@ -56,7 +56,7 @@ public class DemoPlantIcon extends PApplet{
 
     //-- binding
     //-- construction
-    ttt=new EcHotTower("nnn", 100, 100, 1590);
+    ttt=new EcMixer("nnn", 100, 100, 1590);
       
     
     //--post setting
@@ -71,7 +71,7 @@ public class DemoPlantIcon extends PApplet{
     pbRoller&=0x0F;
     boolean lpHalsec=pbRoller<7;
     int lpTestValue=ceil(map(mouseX, 0, width, 1, 99));
-
+    
     //-- local loop
     
     //    ttt.ccSetIsFull(false);
@@ -80,29 +80,21 @@ public class DemoPlantIcon extends PApplet{
     //    if(lpTestValue>95){ttt.ccSetIsFull(true);}
     //    ttt.ccSetDegree(lpTestValue);
     
-    
-    ttt.ccSetMotorStatus(0, 'a');
-    ttt.ccSetMotorStatus(1, 'l');
-    ttt.ccSetMotorStatus(2, 'a');
     if(lpHalsec){
-      ttt.ccSetMotorStatus(0, 'l');
-      ttt.ccSetMotorStatus(1, 'a');
-      ttt.ccSetMotorStatus(2, 'l');
+      
+      
+    }else{
+      
     }
     
-    ttt.ccSetIsOverFlowGateOpening(lpHalsec);
-    ttt.ccSetIsOverSizeGateOpening(!lpHalsec);
-    ttt.ccSetIsOverFlowFull(!lpHalsec);
-    ttt.ccSetIsOverSizeFull(lpHalsec);
     
     ttt.ccUpdate();
     
     //-- system loop
     //-- tagging
     VcTagger.ccTag("roller", pbRoller);
-    VcTagger.ccTag("mx", mouseX);
-    VcTagger.ccTag("my", mouseY);
-    VcTagger.ccTag("testVal", lpTestValue);
+    VcTagger.ccTag("*----*", 0);
+    
     VcTagger.ccStabilize();
 
   }//+++
@@ -213,6 +205,22 @@ public class DemoPlantIcon extends PApplet{
       break;
     }
   }//+++
+  
+  //[TODO]::transfer to its own class[???]
+  static public void ccSetLevel(EcGauge pxTarget, char pxMode_elmf){
+    switch(pxMode_elmf){
+      case 'l':pxTarget.ccSetPercentage(0x22);break;
+      case 'm':pxTarget.ccSetPercentage(0x44);break;
+      case 'f':pxTarget.ccSetPercentage(0x76);break;
+      default: pxTarget.ccSetPercentage(0x01);break;
+    }//..?
+  }//+++
+  
+  //[TODO]::ccCreateMVLamp
+  //[TODO]::ccCreateLSLamp
+  //[TODO]::ccCreateLVLamp
+  //[TODO]::ccCreateMVTriangle
+  //[TODO]::ccCreate...
   
   //=== inner
   //=== inner ** additional localui
@@ -390,6 +398,30 @@ public class DemoPlantIcon extends PApplet{
     }//+++
 
   }//***
+  
+  public class EcMixerShape extends EcHopperShape{
+    
+    private final int C_BACKGROUND = 0xFF000000;//[TODO]::make static
+    
+    private int cmRatio = 4;
+
+    @Override
+    public void ccUpdate(){
+      super.ccUpdate();
+      pbOwner.fill(C_BACKGROUND);
+      pbOwner.ellipse(ccCenterX(), ccEndY(), cmRatio, cmRatio);
+    }//+++
+    
+    public final void ccSetRatio(int pxVal){
+      cmRatio=pxVal;
+    }//+++
+    
+    public final void ccSetRatio(){
+      ccSetCut(cmW/6);
+      cmRatio=cmW/4;
+    }//+++
+    
+  }//***
 
   public class EcBelconShape extends EcShape{
 
@@ -502,6 +534,7 @@ public class DemoPlantIcon extends PApplet{
     }//+++
     
   }//***
+  
 
   //=== inner ** for plant icon
   public class EcMotorIcon extends EcElement{
@@ -1909,15 +1942,228 @@ public class DemoPlantIcon extends PApplet{
   
   class EcFillerSilo extends EcMoterizedUnit{
     
-    //[HEAD]:: now what?
+    private final EcHopperShape cmSiloShape;
+    private final EcGauge cmSiloLV;
+    private final EcLamp cmSiloAir;
+    protected final EcScrewShape cmScrewShape;
+
+    public EcFillerSilo(String pxName, int pxX, int pxY, int pxHeadID){
+      
+      super();
+      ccTakeKey(pxName);
+      ccSetBound(pxX, pxY, 30, 60);
+      ccSetID(pxHeadID);
+      
+      cmSiloShape=new EcHopperShape();
+      cmSiloShape.ccSetBound(cmX, cmY, cmW, cmH);
+      cmSiloShape.ccSetCut(cmW/3);
+      cmSiloShape.ccSetBaseColor(C_SHAPE_METAL);
+      
+      cmScrewShape=new EcScrewShape();
+      cmScrewShape.ccSetCut(-1, -1);
+      cmScrewShape.ccSetBound(cmX+2, ccEndY()+2, cmW*3/2, 10);
+      cmScrewShape.ccSetBaseColor(C_SHAPE_METAL);
+      
+      cmSiloLV=new EcGauge();
+      cmSiloLV.ccSetBound(cmX+3, cmY+3, 4, cmH*3/4);
+      cmSiloLV.ccSetIsVertical(true);
+      cmSiloLV.ccSetHasStroke(true);
+      cmSiloLV.ccSetGaugeColor(EcFactory.C_DIM_GRAY, EcFactory.C_LIT_GRAY);
+      cmSiloLV.ccSetColor(EcFactory.C_PURPLE, EcFactory.C_GREEN);
+      
+      cmSiloAir=new EcLamp();
+      cmSiloAir.ccSetSize(16, 16);
+      cmSiloAir.ccSetLocation(ccEndX()-8, ccEndY()-8-cmW/3);
+      cmSiloAir.ccSetNameAlign('x');
+      cmSiloAir.ccSetText("A");
+      cmSiloAir.ccSetColor(EcFactory.C_ORANGE);
+      
+      cmMotor.ccSetLocation(cmScrewShape, 4,4);
+      
+    }//++!
     
+    @Override
+    public void ccUpdate(){
+      
+      cmSiloShape.ccUpdate();
+      cmScrewShape.ccUpdate();
+      cmSiloLV.ccUpdate();
+      cmSiloAir.ccUpdate();
+      cmMotor.ccUpdate();
+      
+    }//+++
+    
+    public final void ccSetIsAirating(boolean pxStatus){
+      cmSiloAir.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetSiloLevel(char pxMode_elmf){
+      //[TODO]::get the righter host
+      DemoPlantIcon.ccSetLevel(cmSiloLV, pxMode_elmf);
+    }//+++
     
   }//***
   
-  //class EcDustSilo {}//***
-  //class EcDustMixer {}//***
+  class EcDustSilo extends EcFillerSilo{
+    
+    private final EcTriangleLamp cmRecievePL;
+  
+    public EcDustSilo(String pxName, int pxX, int pxY, int pxHeadID){
+    
+      super(pxName, pxX, pxY, pxHeadID);
+      
+      cmScrewShape.ccSetLocation(cmX-20, cmY-10);
+      cmScrewShape.ccSetCut(-1, cmScrewShape.ccGetW()-8);
+      
+      cmMotor.ccSetLocation(cmScrewShape,4, -8);
+      
+      cmRecievePL=new EcTriangleLamp();
+      cmRecievePL.ccSetColor(EcFactory.C_ORANGE);
+      cmRecievePL.ccSetText(" ");
+      cmRecievePL.ccSetName("BF");
+      cmRecievePL.ccSetNameAlign('l');
+      cmRecievePL.ccSetDirection('r');
+      cmRecievePL.ccSetLocation(cmScrewShape, -16,-1);
+      
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+   
+      super.ccUpdate(); 
+      cmRecievePL.ccUpdate();
+      
+    }//+++
+    
+    public final void ccSetIsTakingIn(boolean pxStatus){
+      cmRecievePL.ccSetActivated(pxStatus);
+    }//+++
+    
+  }//***
+  
+  class EcDustMixer extends EcElement implements EiMultipleMoterized{
+    
+    public final int //[TODO]::static
+      C_I_MIXER=0,
+      C_I_SCREW=1
+    ;//...
+    
+    private final int C_DUCT_THICK=4;//[TOOD]::static
+    
+    private final EcMixerShape cmMixerShape;
+    private final EcScrewShape cmScrewShape;
+    private final EcMotorIcon cmMixerMotor;
+    private final EcMotorIcon cmScrewMotor;
+    private final EcTriangleLamp cmWaterPumpPL;
+    
+    public EcDustMixer(String pxName, int pxX, int pxY, int pxHeadID){
+      
+      super();
+      ccTakeKey(pxName);
+      ccSetBound(pxX, pxY, 48, 24);
+      ccSetID(pxHeadID);
+      
+      cmMixerShape=new EcMixerShape();
+      cmMixerShape.ccSetBaseColor(C_SHAPE_METAL);
+      cmMixerShape.ccSetBound(cmX, cmY, cmW, cmH);
+      cmMixerShape.ccSetRatio();
+      
+      cmScrewShape = new EcScrewShape();
+      cmScrewShape.ccSetBaseColor(C_SHAPE_METAL);
+      cmScrewShape.ccSetSize(cmW,12);
+      cmScrewShape.ccSetLocation(cmMixerShape,-cmW/2, -14);
+      cmScrewShape.ccSetCut(-1, cmW-8);
+      
+      cmMixerMotor=new EcMotorIcon();
+      cmMixerMotor.ccSetLocation(cmMixerShape,4,1);
+      
+      cmScrewMotor=new EcMotorIcon();
+      cmScrewMotor.ccSetLocation(cmScrewShape,4,4);
+      
+      cmWaterPumpPL=new EcTriangleLamp();
+      cmWaterPumpPL.ccSetSize(12,12);
+      cmWaterPumpPL.ccSetLocation
+        (ccEndX()+C_DUCT_THICK*4-4, ccEndY()-C_DUCT_THICK*2-4);
+      cmWaterPumpPL.ccSetColor(EcFactory.C_WATER);
+      cmWaterPumpPL.ccSetDirection('l');
+      cmWaterPumpPL.ccSetName("WP");
+      cmWaterPumpPL.ccSetNameAlign('r');
+      cmWaterPumpPL.ccSetText(" ");
+      
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+    
+      //-- draw base shape
+      cmScrewShape.ccUpdate();
+      cmMixerShape.ccUpdate();
+      
+      //-- draw duct
+      pbOwner.fill(C_SHAPE_DUCT);
+      pbOwner.rect(
+        ccEndX()-C_DUCT_THICK, cmY-C_DUCT_THICK*2,
+        C_DUCT_THICK*3, C_DUCT_THICK
+      );
+      pbOwner.rect(
+        ccEndX()+C_DUCT_THICK, cmY-C_DUCT_THICK*2,
+        C_DUCT_THICK, cmH
+      );
+      pbOwner.rect(
+        ccEndX()+C_DUCT_THICK, ccEndY()-C_DUCT_THICK*2,
+        C_DUCT_THICK*3, C_DUCT_THICK
+      );
+      
+      //-- update element
+      cmMixerMotor.ccUpdate();
+      cmScrewMotor.ccUpdate();
+      cmWaterPumpPL.ccUpdate();
+      
+    }//+++
+    
+    @Override
+    public void ccSetMotorStatus(int pxIndex, char pxStatus_acnlx){
+      switch(pxIndex){
+        case C_I_MIXER:
+          DemoPlantIcon.ccSetMotorStatus(cmMixerMotor,pxStatus_acnlx);
+          break;
+        case C_I_SCREW:
+          DemoPlantIcon.ccSetMotorStatus(cmScrewMotor,pxStatus_acnlx);
+          break;
+        default:break;
+      }//..?
+    }//+++
+    
+    public final void ccSetIsWaterPumpOn(boolean pxStatus){
+      cmWaterPumpPL.ccSetActivated(pxStatus);
+    }//+++
+    
+  }//***
+  
+  class EcMixer extends EcMoterizedUnit{
+    
+    public EcMixer(String pxName, int pxX, int pxY, int pxHeadID){
+      
+    }
+
+    @Override
+    public void ccUpdate(){
+      
+      ccSetColor(EcFactory.C_DARK_GREEN,EcFactory.C_DARK_RED);
+      super.ccUpdate(); //To change body of generated methods, choose Tools | Templates.
+    
+      //[HEAD]::now what?
+      
+    
+    }//+++
+    
+    
+    
+  }//***
+
   //class EcMixer {}//***
   //class EcCobHopper {}//***
+  
   
   //class EcColdElevator {}//***
   //class EcRSurgeBin　{}//***
@@ -1925,6 +2171,11 @@ public class DemoPlantIcon extends PApplet{
   
   //class EcOnePathSkip　{}//***
   //class EcMixtureSilo　{}//***
+  
+  
+      //[DTFM]::
+      //pbOwner.fill(0xFF663333);
+      //pbOwner.rect(cmX, cmY, cmW, cmH);
 
   //=== entry
   static public void main(String[] passedArgs){
