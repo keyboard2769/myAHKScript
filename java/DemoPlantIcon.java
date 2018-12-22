@@ -43,7 +43,7 @@ public class DemoPlantIcon extends PApplet{
   //=== public
   static volatile int pbRoller;
 
-  EcGasUnit ttt;
+  EcHotTower ttt;
   
   //=== overridden
   @Override
@@ -56,7 +56,7 @@ public class DemoPlantIcon extends PApplet{
 
     //-- binding
     //-- construction
-    ttt=new EcGasUnit("nnn", 100, 100, 1590);
+    ttt=new EcHotTower("nnn", 100, 100, 1590);
       
     
     //--post setting
@@ -80,13 +80,20 @@ public class DemoPlantIcon extends PApplet{
     //    if(lpTestValue>95){ttt.ccSetIsFull(true);}
     //    ttt.ccSetDegree(lpTestValue);
     
-    ttt.ccSetIsLeakHI(lpHalsec);
-    ttt.ccSetIsLeakLO(!lpHalsec);
-    ttt.ccSetIsPressureHI(lpHalsec);
-    ttt.ccSetIsPressureLO(!lpHalsec);
-    ttt.ccSetIsValveAOpen(lpHalsec);
-    ttt.ccSetIsValveBOpen(!lpHalsec);
     
+    ttt.ccSetMotorStatus(0, 'a');
+    ttt.ccSetMotorStatus(1, 'l');
+    ttt.ccSetMotorStatus(2, 'a');
+    if(lpHalsec){
+      ttt.ccSetMotorStatus(0, 'l');
+      ttt.ccSetMotorStatus(1, 'a');
+      ttt.ccSetMotorStatus(2, 'l');
+    }
+    
+    ttt.ccSetIsOverFlowGateOpening(lpHalsec);
+    ttt.ccSetIsOverSizeGateOpening(!lpHalsec);
+    ttt.ccSetIsOverFlowFull(!lpHalsec);
+    ttt.ccSetIsOverSizeFull(lpHalsec);
     
     ttt.ccUpdate();
     
@@ -444,6 +451,54 @@ public class DemoPlantIcon extends PApplet{
     public final void ccSetCut(int pxIn, int pxOut){
       cmInCut=pxIn>=cmW?0:pxIn;
       cmOutCut=pxOut>=cmW?0:pxOut;
+    }//+++
+    
+  }//***
+  
+  public class EcElevatorShape extends EcShape{
+    
+    private int cmCut=4;
+    private char cmDirection='l';
+
+    @Override
+    public void ccUpdate(){
+      
+      pbOwner.fill(cmBaseColor);
+      pbOwner.rect(cmX,cmY,cmW,cmH);
+      switch(cmDirection){
+        case 'l':
+          pbOwner.triangle(
+            cmX, cmY,
+            cmX, cmY+cmCut,
+            cmX-cmW, cmY+cmCut
+          );
+          pbOwner.triangle(
+            ccEndX(), ccEndY()-cmCut,
+            ccEndX()+cmW, ccEndY()-cmCut,
+            ccEndX(),ccEndY()
+          );
+          break;
+        case 'r':
+          pbOwner.triangle(
+            ccEndX(),cmY,
+            ccEndX()+cmW,cmY+cmCut,
+            ccEndX(),cmY+cmCut
+          );
+          pbOwner.triangle(
+            cmX-cmW,ccEndY()-cmCut,
+            cmX,ccEndY()-cmCut,
+            cmX,ccEndY()
+          );
+          break;
+        default:break;
+      }//..?
+    
+    }//+++
+    
+    public final void ccSetCut(int pxVal){cmCut=pxVal;}//+++
+    
+    public final void ccSetDirection(char pxMode_lr){
+      cmDirection=pxMode_lr;
     }//+++
     
   }//***
@@ -1671,24 +1726,205 @@ public class DemoPlantIcon extends PApplet{
     
   }//***
   
-  class EcHotTower extends EcElement{
+  class EcHotTower extends EcElement implements EiMultipleMoterized{
     
-    //[HEAD]::what ever
+    public final int//[TODO]::make static
+      C_I_SCREEN=0,
+      C_I_HOTELEVATOR=1,
+      C_I_BLOWER=2
+    ;//...
+    
+    private final int //[TODO]::make static
+      C_TOWER_W=40,
+      C_FLOOR_H=20,
+      C_FLOOR_GAP=4,
+      C_DUCT_THICK=8,
+      C_SCREEN_CUT=16
+    ;//...
+    
+    private final EcElevatorShape cmHotElevatorShape;
+    private final EcBlowerShape cmBlowerShape;
+    private final EcLamp cmOverFlowLV;
+    private final EcLamp cmOverSizeLV;
+    private final EcTriangleLamp cmOverFlowGate;
+    private final EcTriangleLamp cmOverSizeGate;
+    private final EcMotorIcon cmScreenMotor;
+    private final EcMotorIcon cmElevatorMotor;
+    private final EcMotorIcon cmBlowerMotor;
+    
+    public EcHotTower(String pxName, int pxX, int pxY, int pxHeadID){
+      
+      super();
+      ccTakeKey(pxName);
+      ccSetLocation(pxX, pxY);
+      ccSetSize(C_TOWER_W,C_FLOOR_H*4+C_FLOOR_GAP*2);
+      
+      int lpCut=16;
+      cmHotElevatorShape = new EcElevatorShape();
+      cmHotElevatorShape.ccSetCut(lpCut);
+      cmHotElevatorShape.ccSetLocation(
+        ccEndX()+C_DUCT_THICK/2+C_FLOOR_GAP*2,
+        cmY-C_FLOOR_H-lpCut-C_FLOOR_GAP*2
+      );
+      cmHotElevatorShape.ccSetSize(12,cmH+lpCut+C_FLOOR_H+C_FLOOR_GAP*2);
+      cmHotElevatorShape.ccSetBaseColor(EcFactory.C_GRAY);
+      
+      cmBlowerShape = new EcBlowerShape();
+      cmBlowerShape.ccSetLocation(ccCenterX()+C_FLOOR_H-4, cmY+C_FLOOR_H+C_FLOOR_GAP*2);
+      cmBlowerShape.ccSetSize(cmH/6, C_FLOOR_H/3);
+      cmBlowerShape.ccSetBaseColor(EcFactory.C_WHITE);
+      cmBlowerShape.ccSetDirection('r');
+      
+      cmOverSizeLV = new EcLamp();
+      cmOverSizeLV.ccSetLocation(cmX-C_FLOOR_GAP-C_DUCT_THICK-1, cmY-6);
+      cmOverSizeLV.ccSetSize(12,12);
+      cmOverSizeLV.ccSetText(" ");
+      cmOverSizeLV.ccSetColor(EcFactory.C_GREEN);
+      
+      cmOverFlowLV = new EcLamp();
+      cmOverFlowLV.ccSetLocation(ccEndX()+C_FLOOR_GAP-5, cmY-6);
+      cmOverFlowLV.ccSetSize(12,12);
+      cmOverFlowLV.ccSetText(" ");
+      cmOverFlowLV.ccSetColor(EcFactory.C_GREEN);
+      
+      cmOverSizeGate = new EcTriangleLamp();
+      cmOverSizeGate.ccSetLocation(cmOverSizeLV, 1, cmH);
+      cmOverSizeGate.ccSetSize(12,12);
+      cmOverSizeGate.ccSetText(" ");
+      cmOverSizeGate.ccSetDirection('d');
+      cmOverSizeGate.ccSetColor(EcFactory.C_ORANGE);
+      
+      cmOverFlowGate = new EcTriangleLamp();
+      cmOverFlowGate.ccSetLocation(cmOverFlowLV, 1, cmH);
+      cmOverFlowGate.ccSetSize(12,12);
+      cmOverFlowGate.ccSetText(" ");
+      cmOverFlowGate.ccSetDirection('d');
+      cmOverFlowGate.ccSetColor(EcFactory.C_ORANGE);
+      
+      cmElevatorMotor = new EcMotorIcon();
+      cmElevatorMotor.ccSetLocation(cmHotElevatorShape, 2, -4);
+      
+      cmScreenMotor = new EcMotorIcon();
+      cmScreenMotor.ccSetLocation
+        (cmX+C_SCREEN_CUT,cmY-C_FLOOR_GAP-C_FLOOR_H-8);
+      
+      cmBlowerMotor = new EcMotorIcon();
+      cmBlowerMotor.ccSetLocation
+        (cmX+C_TOWER_W/2+4,cmY+C_FLOOR_GAP+C_FLOOR_H-4);
+      
+    }//++!
+
+    @Override
+    public void ccUpdate(){
+      
+      //-- draw tower
+      pbOwner.fill(EcFactory.C_LIT_GRAY);
+      pbOwner.rect(cmX, cmY, cmW, C_FLOOR_H);
+      pbOwner.rect(cmX, cmY+C_FLOOR_H+C_FLOOR_GAP, cmW, C_FLOOR_H);
+      pbOwner.rect(cmX, cmY+2*(C_FLOOR_H+C_FLOOR_GAP), cmW, C_FLOOR_H);
+      pbOwner.rect(
+        cmX, cmY+3*C_FLOOR_H+2*C_FLOOR_GAP,
+        C_DUCT_THICK, C_FLOOR_H
+      );
+      pbOwner.rect(
+        ccEndX()-C_DUCT_THICK, cmY+3*C_FLOOR_H+2*C_FLOOR_GAP,
+        C_DUCT_THICK, C_FLOOR_H
+      );
+      
+      //-- draw screen
+      pbOwner.fill(EcFactory.C_GRAY);
+      pbOwner.quad(
+        cmX+C_SCREEN_CUT, cmY-C_FLOOR_GAP-C_FLOOR_H,
+        ccEndX(), cmY-C_FLOOR_GAP-C_FLOOR_H,
+        ccEndX(), cmY-C_FLOOR_GAP,
+        cmX, cmY-C_FLOOR_GAP
+      );
+      pbOwner.fill(EcFactory.C_LIT_GRAY);
+      pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-2, -3*C_TOWER_W/4, -2);
+      pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-6, -2*C_TOWER_W/4, -2);
+      pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-10, -2*C_TOWER_W/4, -2);
+      pbOwner.rect(ccEndX()-2, cmY-C_FLOOR_GAP-14, -2*C_TOWER_W/4, -2);
+      
+      //-- draw extract duct
+      pbOwner.fill(EcFactory.C_GRAY);
+      pbOwner.rect(
+        cmX-C_FLOOR_GAP, cmY,
+        -1*C_DUCT_THICK/2, cmH-C_FLOOR_GAP*2
+      );
+      pbOwner.rect(
+        ccEndX()+C_FLOOR_GAP, cmY, 
+        C_DUCT_THICK/2, cmH-C_FLOOR_GAP*2
+      );
+      
+      //-- draw elevator
+      cmHotElevatorShape.ccUpdate();
+      
+      //-- draw blower
+      cmBlowerShape.ccUpdate();
+      
+      //-- update element
+      cmOverSizeLV.ccUpdate();
+      cmOverFlowLV.ccUpdate();
+      cmOverSizeGate.ccUpdate();
+      cmOverFlowGate.ccUpdate();
+      cmElevatorMotor.ccUpdate();
+      cmScreenMotor.ccUpdate();
+      cmBlowerMotor.ccUpdate();
+      
+    }//+++
+
+    @Override
+    public void ccSetMotorStatus(int pxIndex, char pxStatus_acnlx){
+      switch(pxIndex){
+        case C_I_SCREEN:
+          DemoPlantIcon.ccSetMotorStatus(cmScreenMotor, pxStatus_acnlx);
+          break;
+        case C_I_HOTELEVATOR:
+          DemoPlantIcon.ccSetMotorStatus(cmElevatorMotor, pxStatus_acnlx);
+          break;
+        case C_I_BLOWER:
+          DemoPlantIcon.ccSetMotorStatus(cmBlowerMotor, pxStatus_acnlx);
+          break;
+        default:break;
+      }//..?
+    }//+++
+    
+    public final void ccSetIsOverFlowFull(boolean pxStatus){
+      cmOverFlowLV.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetIsOverSizeFull(boolean pxStatus){
+      cmOverSizeLV.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetIsOverFlowGateOpening(boolean pxStatus){
+      cmOverFlowGate.ccSetActivated(pxStatus);
+    }//+++
+    
+    public final void ccSetIsOverSizeGateOpening(boolean pxStatus){
+      cmOverSizeGate.ccSetActivated(pxStatus);
+    }//+++
     
   }//***
   
-  //class EcDustSilo
-  //class EcDustMixer
-  //class EcFillerSilo
-  //class EcMixer
-  //class EcCobHopper
+  class EcFillerSilo extends EcMoterizedUnit{
+    
+    //[HEAD]:: now what?
+    
+    
+  }//***
   
-  //class EcColdElevator 
-  //class EcRSurgeBin
-  //class EcRExhaustFan
+  //class EcDustSilo {}//***
+  //class EcDustMixer {}//***
+  //class EcMixer {}//***
+  //class EcCobHopper {}//***
   
-  //class EcOnePathSkip
-  //class EcMixtureSilo
+  //class EcColdElevator {}//***
+  //class EcRSurgeBin　{}//***
+  //class EcRExhaustFan　{}//***
+  
+  //class EcOnePathSkip　{}//***
+  //class EcMixtureSilo　{}//***
 
   //=== entry
   static public void main(String[] passedArgs){
