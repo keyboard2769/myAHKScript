@@ -6,15 +6,11 @@
  *   something better. 
  *
  * + keybord input: 
- *  - [Q]:exit program
- *  - [N]:hide/show tagged infos
- *  - [M]:hide/show mouse axis 
- *  - [,]:reset mouse anchor
- *  - [enter]:input command
+ *  - [Enter]:show input bar
  *
  * + command input:
  *  - [quit]:exit program
- *  - [help]:look for help info(but you ll get nothing)
+ *  - [echo,.+]:stack as split lines
  *
  * (this is supposed to be an example sketch of project kosui )
  * (for Processing 2.x core )
