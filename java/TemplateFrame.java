@@ -3,6 +3,10 @@ package ppptest;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -77,8 +81,16 @@ public final class TemplateFrame{
     pbFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     pbFrame.setJMenuBar(lpMenuBar);
     pbFrame.getContentPane().add(ssCreateCenterPane());
-    pbFrame.setLocation(128, 128);
-    pbFrame.setPreferredSize(new Dimension(320, 240));
+    
+    //-- frame ** packup
+    Point lpOrigin=ccGetScreenInitPoint();
+    Dimension lpScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    Dimension lpWindowSize = new Dimension(320, 240);
+    pbFrame.setLocation(
+      lpOrigin.x+lpScreenSize.width/2-lpWindowSize.width/2,
+      lpOrigin.y+lpScreenSize.height/2-lpWindowSize.height/2
+    );
+    pbFrame.setPreferredSize(lpWindowSize);
     pbFrame.setResizable(false);
     pbFrame.pack();
     pbFrame.setVisible(true);
@@ -126,7 +138,7 @@ public final class TemplateFrame{
         int lpCharCode=(int)ke.getKeyChar();
         switch(lpCharCode){
           case 0x0A:
-            pbArea.append(pbField.getText()+C_V_NEWLINE);
+            ccStackln("[echo]"+pbField.getText());
             pbField.setText("");
             int lpMax=lpCenterPane.getVerticalScrollBar()
               .getModel().getMaximum();
@@ -148,6 +160,16 @@ public final class TemplateFrame{
   }//+++
   
   //=== utility
+  
+  public static final void ccStackln(String pxLine){
+    if(pxLine==null){return;}
+    pbArea.append(pxLine+C_V_NEWLINE);
+  }//+++
+  
+  public static final void ccStackln(String pxTag, Object pxVal){
+    if(pxTag==null || pxVal==null){return;}
+    pbArea.append(pxTag+":"+pxVal.toString()+C_V_NEWLINE);
+  }//+++
   
   private static void ssApplyLookAndFeel(int pxIndex, boolean pxRead) {
 
@@ -188,6 +210,26 @@ public final class TemplateFrame{
     if(SwingUtilities.isEventDispatchThread() && (pbFrame!=null)){
       JOptionPane.showMessageDialog(pbFrame,pxMessage);
     }else{System.err.println("[BLOCKED]ccMessageBox()::"+pxMessage);}
+  }//+++
+  
+  public static final Point ccGetScreenInitPoint(){
+    Point lpDummyPoint = null;
+    Point lpInitPoint = null;
+    for (
+      GraphicsDevice lpDevice:
+      GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()
+    ){
+      if (lpDummyPoint == null) {
+        lpDummyPoint = 
+          lpDevice.getDefaultConfiguration().getBounds().getLocation();
+      } else if (lpInitPoint == null) {
+        lpInitPoint = 
+          lpDevice.getDefaultConfiguration().getBounds().getLocation();
+      }//..?
+    }//..~
+    if (lpInitPoint == null) {lpInitPoint = lpDummyPoint;}
+    if (lpInitPoint == null) {lpInitPoint = new Point(0,0);}
+    return lpInitPoint;
   }//+++
   
   //=== entry
