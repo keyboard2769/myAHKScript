@@ -140,10 +140,6 @@ public final class TemplateFrame{
           case 0x0A:
             ccStackln("[echo]"+pbField.getText());
             pbField.setText("");
-            int lpMax=lpCenterPane.getVerticalScrollBar()
-              .getModel().getMaximum();
-            lpCenterPane.getVerticalScrollBar()
-              .getModel().setValue(lpMax);
           break;
           default:break;
         }//..?
@@ -162,13 +158,19 @@ public final class TemplateFrame{
   //=== utility
   
   public static final void ccStackln(String pxLine){
-    if(pxLine==null){return;}
-    pbArea.append(pxLine+C_V_NEWLINE);
+    ccStackln(pxLine, null);
   }//+++
   
   public static final void ccStackln(String pxTag, Object pxVal){
-    if(pxTag==null || pxVal==null){return;}
-    pbArea.append(pxTag+":"+pxVal.toString()+C_V_NEWLINE);
+    if(pxTag==null){return;}
+    if(pxVal==null){
+      pbArea.append(pxTag+C_V_NEWLINE);
+    }else{
+      pbArea.append(pxTag+":"+pxVal.toString()+C_V_NEWLINE);
+    }//..?
+    int lpLength = pbArea.getText().length();
+    pbArea.setSelectionStart(lpLength-1);
+    pbArea.setSelectionEnd(lpLength);
   }//+++
   
   private static void ssApplyLookAndFeel(int pxIndex, boolean pxRead) {
