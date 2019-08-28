@@ -193,6 +193,7 @@ public class ${name} {
     ccStackln("on", C_V_OS);
     ccStackln("from", C_V_PWD);
     ccStackln("*** have fun ***");
+    O_FIELD.requestFocus();
     
   }//+++
   
