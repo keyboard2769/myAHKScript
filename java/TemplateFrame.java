@@ -82,9 +82,7 @@ public class ${name} {
       
       //--
       if(lpCommand.equals("--action-quit")){
-        System.out.println(
-          "pppmain.MainActionManager.actionPerformed()::sys_exit <- 0"
-        );System.exit(0);
+        ssQuit();
         return;
       }//..?
       
@@ -125,7 +123,7 @@ public class ${name} {
         int lpCharCode=(int)ke.getKeyChar();
         switch(lpCharCode){
           case 0x0A:
-            ccStackln("[echo]"+O_FIELD.getText());
+            ccStackln(ccCommandInputed(O_FIELD.getText()));
             O_FIELD.setText("");
           break;
           default:break;
@@ -197,9 +195,43 @@ public class ${name} {
     
   }//+++
   
+  //=== sub
+  
+  private static String ccCommandInputed(String pxLine){
+    if(!ccIsValidString(pxLine)){return "";}
+    
+    //-- **
+    if(pxLine.equals("quit")){
+      ssQuit();
+    return "[OHO]:"+pxLine;
+    }//+++
+    
+    //-- **
+    if(pxLine.equals("run")){
+      ssTest();
+    return "[ACCEPTED]:"+pxLine;
+    }//+++
+    
+    //-- unhandled
+    return "[ECHO]:"+pxLine;
+  }//+++
+  
+  private static void ssTest(){
+    System.out.println(".ssTest()!!");
+  }//+++
+  
+  private static void ssQuit(){
+    System.out.println(
+      ".ssQuit()::call System.exit(0)"
+    );System.exit(0);
+  }//+++
+  
   //=== utility
   
-  public static final JFrame ccGetFrame(){return O_FRAME;}//+++
+  public static final boolean ccIsValidString(String pxLine){
+    if(pxLine==null){return false;}
+    return !pxLine.isEmpty();
+  }//+++
   
   public static final void ccStackln(String pxLine){
     ccStackln(pxLine, null);
@@ -296,6 +328,8 @@ public class ${name} {
   }//+++
 
   //=== entry
+  
+  public static final JFrame ccGetFrame(){return O_FRAME;}//+++
 
   public static void main(String[] args) {
     System.out.println("${name}.main()::activate");
