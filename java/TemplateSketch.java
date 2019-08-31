@@ -1,81 +1,115 @@
-package ppptest;
+<#assign licenseFirst = "/*">
+<#assign licensePrefix = " * ">
+<#assign licenseLast = " */">
+<#include "${project.licensePath}">
 
-import processing.core.*;
-import processing.data.*;
-import processing.event.*;
-import processing.opengl.*;
+<#if package?? && package != "">
+package ${package};
 
-public class TemplateSketch extends PApplet{
+</#if>
+import java.awt.Frame;
+import processing.core.PApplet;
+
+public class ${name} extends PApplet {
   
-  public static int pbRoller = 0;
+  static private ${name} self;
+
+  static private int cmRoller=0;
 
   //=== overridden
-  
+
   @Override public void setup() {
-    
-    //-- pre setting
-    size(320,240);
+    println(".setup()::start");
+
+    //-- pre
+    size(320, 240);
+    frameRate(16);
+    textAlign(LEFT,TOP);
+    ellipseMode(CENTER);
     noSmooth();
-    frame.setTitle("TemplateSketch");
+    noStroke();
+    frame.setTitle("${name}");
+    self=this;
+
+    //-- init
     
-    //-- replace setting
-    frameRate(16);noStroke();textAlign(LEFT, TOP);ellipseMode(CENTER);
+    //-- init ** 
+    
+    //-- init ** 
     
     //-- post setting
-    println("-- setup over");
+    println(".setup()::over");
     
   }//+++
-
-  @Override public void draw() {
   
-    //-- pre drawing
-    background(0);
-    pbRoller++;pbRoller&=0x0f;
-    
-    //-- updating
-    fill(0xFF);
-    text(nf(pbRoller,2),5,5);
-    
-    //-- tagging
-    
-  }//+++
+  @Override public void draw() { 
 
+    //-- pre
+    ssRoll();
+
+    //-- update
+    background(0);
+    
+    //-- update **
+    
+    //-- update **
+    fill(0xEE);
+    text(nf(cmRoller,2),5,5);
+    
+    //-- tag
+
+  }//+++
+  
   @Override public void keyPressed() {
     switch(key){
       
-      //-- direction
-      case 'w':break;
-      case 's':break;
-      case 'a':break;
-      case 'd':break;
-      
-      //-- confirm
-      case 'r':break;
-      case 'f':break;
-      case 'j':break;
-      case 'k':break;
-      
-      //-- defult
+      //-- trigger
+
+      //-- system 
       case 'q':ssPover();break;
       default:break;
     }//..?
   }//+++
   
   //=== utility
-  
+
   private void ssPover(){
     
-    //-- default
-    println("--exit <- ");
+    //-- flushing
+    
+    //-- flushing **
+    
+    //-- flushing **
+    
+    //-- defualt
+    println(".ssPover()::call PApplet.exit()");
     exit();
   }//+++
   
-  //=== inner
+  private void ssRoll(){
+    cmRoller++;cmRoller&=0x0F;
+  }//+++
   
+  //=== inner
+
   //=== entry
   
-  public static void main(String[] args) {
-    PApplet.main(TemplateSketch.class.getCanonicalName());
-  }//++!
+  static public boolean ccGetRollingAbove(int pxZeroToFifteen){
+    return cmRoller>pxZeroToFifteen;
+  }//+++
   
+  static public boolean ccGetRollingAt(int pxZeroToFifteen){
+    return cmRoller==pxZeroToFifteen;
+  }//+++
+  
+  static public ${name} ccGetSketch(){return self;}//+++
+  
+  static public PApplet ccGetApplet(){return self;}//+++
+  
+  static public Frame ccGetFrame(){return self.frame;}//+++
+
+  static public void main(String[] passedArgs) {
+    PApplet.main(${name}.class.getCanonicalName());
+  }//+++
+
 }//***eof
