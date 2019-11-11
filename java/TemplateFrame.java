@@ -19,6 +19,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -31,7 +33,6 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -51,7 +52,7 @@ public class ${name} {
   public static final String C_V_PWD
    = System.getProperty("user.dir");
   
-  private ${name}(){}//..!
+  private ${name}(){}//!!!
   
   //=== inner
   
@@ -59,185 +60,149 @@ public class ${name} {
    = new BufferedImage(32, 32, BufferedImage.TYPE_INT_RGB);
   
   private static final JFrame O_FRAME
-   = new JFrame("${name} v0.01");
-  
-  private static final JPanel O_CONTENT_PANE
-   = new JPanel(new BorderLayout());
+   = new JFrame("${name} v0.1.0");
   
   private static final JTextArea O_AREA
-   = new JTextArea("standby::"+C_V_NEWLINE);
+   = new JTextArea(">>>"+C_V_NEWLINE);
   
   private static final JTextField O_FIELD
    = new JTextField("");
   
+  //=== manager
+  
+  private static final HashMap<Object,Runnable> O_MAP_OF_ACTION
+    = new HashMap<>();
+  
   private static final ActionListener O_ACT_LISTENER = new ActionListener() {
     @Override public void actionPerformed(ActionEvent ae) {
-      String lpCommand = ae.getActionCommand();
-      
-      //--
-      if(lpCommand.equals("--action-info")){
-        ccMessageBox("still_a_test_version");
-        return;
-      }//..?
-      
-      //--
-      if(lpCommand.equals("--action-quit")){
-        ssQuit();
-        return;
-      }//..?
-      
-      //-- unhandled 
-      System.err.println("pppmain.MainActionManager.actionPerformed()::"
-       + "unhandled_action_command:"+lpCommand);
-      
+      Object lpSource = ae.getSource();
+      if(lpSource==null){return;}
+      if(!O_MAP_OF_ACTION.containsKey(lpSource)){return;}
+      O_MAP_OF_ACTION.get(lpSource).run();
     }//+++
-  };
+  };//***
   
-  //=== setup
+  private static final KeyListener O_KEY_LISTENER = new KeyListener() {
+    @Override public void keyTyped(KeyEvent ke){}//+++
+    @Override public void keyPressed(KeyEvent ke){}//+++
+    @Override public void keyReleased(KeyEvent ke){
+      int lpCharCode=(int)ke.getKeyChar();
+      switch(lpCharCode){
+        case 0x0A:
+          ccWriteln(ccExecute(O_FIELD.getText()));
+          O_FIELD.setText("");
+        break;
+        default:break;
+      }//..?
+    }//+++
+  };//***
   
-  private static void ssSetupIcon(){
-    for(int x=0;x<32;x++){for(int y=0;y<32;y++){
-      O_ICON.setRGB(x, y, 0xFF339933);
-      if(x>y){O_ICON.setRGB(x, y, 0xFFEEEEEE);}
-      if(
-        (x<=2 || x>=29)||
-        (y<=2 || y>=29)
-      ){O_ICON.setRGB(x, y, 0xFF111111);}
-    }}//..?
-  }//+++
+  //=== action
   
-  private static void ssSetupContentPane(){
-    
-    //-- component ** area
-    O_AREA.setBackground(Color.LIGHT_GRAY);
-    O_AREA.setDisabledTextColor(Color.DARK_GRAY);
-    O_AREA.setEditable(false);
-    O_AREA.setEnabled(false);
-    JScrollPane lpCenterPane=new JScrollPane(O_AREA);
-    
-    //-- component ** field
-    O_FIELD.addKeyListener(new KeyListener() {
-      @Override public void keyTyped(KeyEvent ke){}//+++
-      @Override public void keyPressed(KeyEvent ke){}//+++
-      @Override public void keyReleased(KeyEvent ke){
-        int lpCharCode=(int)ke.getKeyChar();
-        switch(lpCharCode){
-          case 0x0A:
-            ccStackln(ccCommandInputed(O_FIELD.getText()));
-            O_FIELD.setText("");
-          break;
-          default:break;
-        }//..?
-      }//+++
-    });
-    
-    //-- packing
-    O_CONTENT_PANE.add(lpCenterPane,BorderLayout.CENTER);
-    O_CONTENT_PANE.add(O_FIELD,BorderLayout.PAGE_END);
-    O_CONTENT_PANE.setBorder(BorderFactory.createEtchedBorder());
-    
-  }//+++
+  public static final Runnable O_QUITTING = new Runnable(){
+    @Override public void run() {
+      int lpCode=0;
+      System.out.println("${name}::end_with:"+Integer.toString(lpCode));
+      System.exit(lpCode);
+    }//+++
+  };//***
   
-  private static void ssSetupFrame() {
+  public static final Runnable O_DISCLAIMING = new Runnable(){
+    @Override public void run() {
+      ccMessageBox(
+        "CAST IN THE NAME OF TEST"
+        +C_V_NEWLINE+
+        "YA NOT GUILTY"
+      );
+    }//+++
+  };//***
+  
+  private static final Runnable O_SWING_SETUP = new Runnable(){ 
+    @Override public void run() {
+      
+      //-- menu ** item
+      JMenuItem lpInfoItem = new JMenuItem("Info");
+      lpInfoItem.setActionCommand("--action-info");
+      lpInfoItem.setMnemonic(KeyEvent.VK_I);
+      
+      JMenuItem lpQuitItem = new JMenuItem("Quit");
+      lpQuitItem.setActionCommand("--action-quit");
+      lpQuitItem.setMnemonic(KeyEvent.VK_Q);
+      
+      //-- menu ** bar
+      JMenu lpFileMenu=new JMenu("File");
+      lpFileMenu.setMnemonic(KeyEvent.VK_F);
+      lpFileMenu.add(lpQuitItem);
+      
+      JMenu lpHelpMenu = new JMenu("Help");
+      lpHelpMenu.setMnemonic(KeyEvent.VK_H);
+      lpHelpMenu.add(lpInfoItem);
+      
+      JMenuBar lpMenuBar = new JMenuBar();
+      lpMenuBar.add(lpFileMenu);
+      lpMenuBar.add(lpHelpMenu);
+      
+      //-- shell ** ui
+      O_AREA.setBackground(Color.LIGHT_GRAY);
+      O_AREA.setDisabledTextColor(Color.DARK_GRAY);
+      O_AREA.setEditable(false);
+      O_AREA.setEnabled(false);
+      JScrollPane lpAreaPane=new JScrollPane(O_AREA);
+      O_FIELD.addKeyListener(O_KEY_LISTENER);
+      
+      //-- shell ** pane
+      JPanel lpContentPane = new JPanel(new BorderLayout());
+      lpContentPane.setBorder(BorderFactory.createEtchedBorder());
+      lpContentPane.add(lpAreaPane,BorderLayout.CENTER);
+      lpContentPane.add(O_FIELD,BorderLayout.PAGE_END);
+      
+      //-- frame ** setup
+      O_FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      O_FRAME.setJMenuBar(lpMenuBar);
+      O_FRAME.setContentPane(lpContentPane);
+      
+      //-- frame ** icon
+      ccSetupIcon(O_ICON);
+      O_FRAME.setIconImage(O_ICON);
+      
+      //-- frame ** packup
+      Point lpOrigin=ccGetScreenInitPoint();
+      Dimension lpScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      Dimension lpWindowSize = new Dimension(320, 240);
+      O_FRAME.setLocation(
+        lpOrigin.x+lpScreenSize.width/2-lpWindowSize.width/2,
+        lpOrigin.y+lpScreenSize.height/2-lpWindowSize.height/2
+      );
+      O_FRAME.setPreferredSize(lpWindowSize);
+      O_FRAME.setResizable(false);
+      O_FRAME.pack();
+      O_FRAME.setVisible(true);
+      
+      //-- bind
+      ccRegisterAction(lpQuitItem, O_QUITTING);
+      ccRegisterAction(lpInfoItem, O_DISCLAIMING);
+      ccRegisterAction("quit", O_QUITTING);
+      
+      //-- post
+      ccWriteln("[sys]on", C_V_OS);
+      ccWriteln("[sys]from", C_V_PWD);
+      ccWriteln("[*** bon appetit ***]");
 
-    //-- menu ** item
-    JMenuItem lpInfoItem = new JMenuItem("Info");
-    lpInfoItem.setActionCommand("--action-info");
-    lpInfoItem.setMnemonic(KeyEvent.VK_I);
-    lpInfoItem.addActionListener(O_ACT_LISTENER);
-    
-    JMenuItem lpQuitItem = new JMenuItem("Quit");
-    lpQuitItem.setActionCommand("--action-quit");
-    lpQuitItem.setMnemonic(KeyEvent.VK_Q);
-    lpQuitItem.addActionListener(O_ACT_LISTENER);
-    
-    //-- menu ** bar
-    JMenu lpFileMenu=new JMenu("File");
-    lpFileMenu.setMnemonic(KeyEvent.VK_F);
-    lpFileMenu.add(lpQuitItem);
-    
-    JMenu lpHelpMenu = new JMenu("Help");
-    lpHelpMenu.setMnemonic(KeyEvent.VK_H);
-    lpHelpMenu.add(lpInfoItem);
-    
-    JMenuBar lpMenuBar = new JMenuBar();
-    lpMenuBar.add(lpFileMenu);
-    lpMenuBar.add(lpHelpMenu);
-    
-    //-- setup
-    ssSetupIcon();
-    ssSetupContentPane();
-    
-    //-- frame ** setup
-    O_FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    O_FRAME.setIconImage(O_ICON);
-    O_FRAME.setJMenuBar(lpMenuBar);
-    O_FRAME.setContentPane(O_CONTENT_PANE);
-    
-    //-- frame ** packup
-    Point lpOrigin=ccGetScreenInitPoint();
-    Dimension lpScreenSize = Toolkit.getDefaultToolkit().getScreenSize();
-    Dimension lpWindowSize = new Dimension(320, 240);
-    O_FRAME.setLocation(
-      lpOrigin.x+lpScreenSize.width/2-lpWindowSize.width/2,
-      lpOrigin.y+lpScreenSize.height/2-lpWindowSize.height/2
-    );
-    O_FRAME.setPreferredSize(lpWindowSize);
-    O_FRAME.setResizable(false);
-    O_FRAME.pack();
-    O_FRAME.setVisible(true);
-    
-    //-- post
-    ccStackln("on", C_V_OS);
-    ccStackln("from", C_V_PWD);
-    ccStackln("*** have fun ***");
-    O_FIELD.requestFocus();
-    
-  }//+++
-  
-  //=== sub
-  
-  private static String ccCommandInputed(String pxLine){
-    if(!ccIsValidString(pxLine)){return "";}
-    
-    //-- **
-    if(pxLine.equals("quit")){
-      ssQuit();
-    return "[OHO]:"+pxLine;
     }//+++
-    
-    //-- **
-    if(pxLine.equals("run")){
-      ssTest();
-    return "[ACCEPTED]:"+pxLine;
-    }//+++
-    
-    //-- unhandled
-    return "[ECHO]:"+pxLine;
-  }//+++
+  };//***
   
-  private static void ssTest(){
-    System.out.println(".ssTest()!!");
-  }//+++
+  //=== util
   
-  private static void ssQuit(){
-    System.out.println(
-      ".ssQuit()::call System.exit(0)"
-    );System.exit(0);
-  }//+++
-  
-  //=== utility
-  
-  public static final boolean ccIsValidString(String pxLine){
+  static public final boolean ccIsValidString(String pxLine){
     if(pxLine==null){return false;}
     return !pxLine.isEmpty();
   }//+++
   
-  public static final void ccStackln(String pxLine){
-    ccStackln(pxLine, null);
+  public static final void ccWriteln(String pxLine){
+    ccWriteln(pxLine, null);
   }//+++
   
-  public static final void ccStackln(String pxTag, Object pxVal){
+  public static final void ccWriteln(String pxTag, Object pxVal){
     if(pxTag==null){return;}
     if(pxVal==null){
       O_AREA.append(pxTag+C_V_NEWLINE);
@@ -249,10 +214,54 @@ public class ${name} {
     O_AREA.setSelectionEnd(lpLength);
   }//+++
   
+  public static final
+  void ccRegisterAction(AbstractButton pxButton, Runnable pxAction){
+    if(pxButton==null){return;}
+    if(pxAction==null){return;}
+    if(O_MAP_OF_ACTION.containsKey(pxButton)){return;}
+    pxButton.addActionListener(O_ACT_LISTENER);
+    O_MAP_OF_ACTION.put(pxButton, pxAction);
+  }//+++
+  
+  public static final
+  void ccRegisterAction(String pxCommand, Runnable pxAction){
+    if(!ccIsValidString(pxCommand)){return;}
+    if(pxAction==null){return;}
+    if(O_MAP_OF_ACTION.containsKey(pxCommand)){return;}
+    O_MAP_OF_ACTION.put(pxCommand, pxAction);
+  }//+++
+  
+  public static final
+  String ccExecute(String pxCommand){
+    if(!ccIsValidString(pxCommand)){return ">>>";}
+    if(O_MAP_OF_ACTION.containsKey(pxCommand)){
+      O_MAP_OF_ACTION.get(pxCommand).run();
+      return "[accepted]"+pxCommand;
+    }else{
+      return "[unhandled]"+pxCommand;
+    }//..?
+  }//+++
+  
+  //=== ui
+  
+  public static final void ccSetupIcon(BufferedImage pxImage){
+    if(pxImage==null){return;}
+    if(pxImage.getWidth()!=32){return;}
+    if(pxImage.getHeight()!=32){return;}
+    for(int x=0;x<32;x++){for(int y=0;y<32;y++){
+      pxImage.setRGB(x, y, 0xFF339933);
+      if(x>y){pxImage.setRGB(x, y, 0xFFEEEEEE);}
+      if(
+        (x<=2 || x>=29)||
+        (y<=2 || y>=29)
+      ){pxImage.setRGB(x, y, 0xFF111111);}
+    }}//..~
+  }//+++
+  
   public static final void ccMessageBox(String pxMessage){
     if(SwingUtilities.isEventDispatchThread() && (O_FRAME!=null)){
       JOptionPane.showMessageDialog(O_FRAME,pxMessage);
-    }else{System.err.println("[BLOCKED]ccMessageBox()::"+pxMessage);}
+    }else{System.err.println(".ccMessageBox()::"+pxMessage);}
   }//+++
   
   public static final boolean ccYesOrNoBox(String pxMessage){
@@ -260,12 +269,12 @@ public class ${name} {
       int lpRes=JOptionPane.showConfirmDialog(
         O_FRAME,
         pxMessage,
-        O_FRAME!=null?O_FRAME.getTitle():"!!",
+        O_FRAME!=null?O_FRAME.getTitle():"<!>",
         JOptionPane.YES_NO_OPTION
       );
       return lpRes==0;
     }else{
-      System.err.println("[BLOCKED]ccMessageBox()::"+pxMessage);
+      System.err.println(".ccMessageBox()::"+pxMessage);
       return false;
     }//..?
   }//+++
@@ -290,7 +299,7 @@ public class ${name} {
     return lpInitPoint;
   }//+++
   
-  private static void ssApplyLookAndFeel(int pxIndex, boolean pxRead) {
+  public static void ccApplyLookAndFeel(int pxIndex, boolean pxRead) {
 
     //-- pre
     String lpTarget = UIManager.getCrossPlatformLookAndFeelClassName();
@@ -300,7 +309,7 @@ public class ${name} {
       UIManager.LookAndFeelInfo[] lpInfos
         = UIManager.getInstalledLookAndFeels();
       if (pxRead) {
-        System.out.println("--installed lookNfeel: 0->");
+        System.out.println(".ssApplyLookAndFeel::installed lookNfeel: 0->");
         int cnt=0;
         for (UIManager.LookAndFeelInfo it : lpInfos) {
           System.out.print("["+Integer.toString(cnt)+"] ");
@@ -315,15 +324,9 @@ public class ${name} {
     //-- applying
     try {
       UIManager.setLookAndFeel(lpTarget);
-    } catch (ClassNotFoundException e) {
+    } catch (Exception e) {
       System.err.println(".ccApplyLookAndFeel()::" + e.getMessage());
-    } catch (InstantiationException e) {
-      System.err.println(".ccApplyLookAndFeel()::" + e.getMessage());
-    } catch (IllegalAccessException e) {
-      System.err.println(".ccApplyLookAndFeel()::" + e.getMessage());
-    } catch (UnsupportedLookAndFeelException e) {
-      System.err.println(".ccApplyLookAndFeel()::" + e.getMessage());
-    }//..%
+    }//..?
 
   }//+++
 
@@ -332,12 +335,10 @@ public class ${name} {
   public static final JFrame ccGetFrame(){return O_FRAME;}//+++
 
   public static void main(String[] args) {
-    System.out.println("${name}.main()::activate");
-    ssApplyLookAndFeel(4, false);
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-      public void run() {ssSetupFrame();}//+++
-    });
-    System.out.println("${name}.main()::over");
-  }//++!
+    System.out.println("${name}.main()::enter");
+    ccApplyLookAndFeel(4, false);
+    SwingUtilities.invokeLater(O_SWING_SETUP);
+    System.out.println("${name}.main()::exit");
+  }//!!!
 
 }//***eof
