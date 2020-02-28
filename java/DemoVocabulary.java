@@ -12,10 +12,10 @@ import processing.data.StringList;
 public class DemoVocabulary extends PApplet{
   
   public static final String C_LIST_LOCATION
-    = "C:\\Users\\N216\\Desktop\\vlist.json";
+    = "<?>";//..fit this
   
   public static final String C_FONT_LOCATION
-    = "<?>";
+    = "<?>";//..fit this
 
   public static int pbRoller = 0;
 
