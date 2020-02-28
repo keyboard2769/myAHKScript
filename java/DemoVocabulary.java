@@ -140,7 +140,23 @@ public class DemoVocabulary extends PApplet{
       }//..?
       if(lpImported!=null){
         for(int i=0,s=lpImported.size();i<s;i++){
+          
+          //-- get pare 
+          JSONArray lpPare = lpImported.getJSONArray(i);
+          if(lpPare == null){continue;}
+          if(lpPare.size()<2){continue;}
+          
+          //-- read pare
+          String lpKey = lpPare.getString(0);
+          if(lpKey==null){continue;}
+          if(lpKey.startsWith("@")){
+            //[extend]::future instruction 
+            continue;
+          }//..?
+          
+          //-- append pare
           cmTheList.append(lpImported.getJSONArray(i));
+          
         }//..~
         ccPickVocab();
       }else{
