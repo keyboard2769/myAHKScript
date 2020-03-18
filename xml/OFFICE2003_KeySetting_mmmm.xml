@@ -1,0 +1,100 @@
+﻿<?xml version="1.0"?>
+<root>
+
+  <def_a
+    v = "value"
+    j = "japanese"
+  />
+  <def_t
+    key  = "key"
+    list = "list"
+  />
+  <key v=""></key>
+  
+  <!-- section -->
+  
+  <toolbar name="標準">
+    <key j="新規作成"/>
+    <key j="開く"/>
+    <key j="上書き保存"/>
+    <key j="名前を付けて保存"/>
+    <key j="DocuWorks文書に変換する"/>
+    <sep/>
+    <key j="印刷範囲のクリア"/>
+    <key j="ページ設定"/>
+    <key j="印刷範囲の設定"/>
+    <key j="整列"/>
+    <sep/>
+    <key j="セルの書式設定"/>
+    <key j="フォント"/>
+    <key j="フォントサイズ"/>
+    <key j="塗りつぶしの色"/>
+    <key j="フォントの色"/>
+    <key j="太字"/>
+    <key j="斜体"/>
+    <key j="二重下線"/>
+    <sep/>
+    <key j="左揃え"/>
+    <key j="中央揃え"/>
+    <key j="右揃え"/>
+    <key j="セルを結合して中央揃え"/>
+    <sep/>
+    <key j="罫線のクリア"/>
+    <key j="左罫線"/>
+    <key j="下罫線"/>
+    <key j="内側罫線"/>
+    <key j="外枠罫線"/>
+    <sep/>
+    <key j="行の挿入"/>
+    <key j="行の削除"/>
+    <key j="列の挿入"/>
+    <key j="列の削除"/>
+    <sep/>
+    <key j="高"/>
+    <key j="幅"/>
+  </toolbar>
+  
+  <toolbar name="書式設定">
+    <key j="元に戻す"/>
+    <key j="やり直し"/>
+    <sep/>
+    <key j="数式と値のクリア"/>
+    <key j="書式のクリア"/>
+    <key j="新しいコメント"/>
+    <key j="コメントの削除"/>
+    <sep/>
+    <key j="オブジェクトの選択"/>
+    <key j="四角形"/>
+    <key j="グループ化"/>
+    <key j="グループ解除"/>
+    <sep/>
+    <key j="最前面へ移動"/>
+    <key j="最背面へ移動"/>
+    <key j="左揃え"/>
+    <key j="上揃え"/>
+    <key j="下揃え"/>
+    <key j="右揃え"/>
+    <key j="左右中央揃え"/>
+    <key j="上下中央揃え"/>
+    <sep/>
+    <key j="左90度回転"/>
+    <key j="右90度回転"/>
+    <key j="左右反転"/>
+    <key j="上下反転"/>
+    <sep/>
+    <key j="オートフィルタ"/>
+    <key j="標準表示"/>
+    <key j="改ページプレビュー"/>
+    <sep/>
+    <key j="画面表示縮小"/>
+    <key j="ズーム"/>
+    <key j="画面表示拡大"/>
+  </toolbar>
+  
+  <toolbar name="浮遊">
+    <key j="書式のコピー／貼付け"/>
+    <key j="コピー"/>
+    <key j="値の貼り付け"/>
+  </toolbar>
+  
+</root>
