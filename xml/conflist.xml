@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<root>
+
+  <d t=""></d>
+
+  <!-- OS -->
+  
+  <win_10>
+  
+    <d t="performance">
+      $[This PC] $[Advanced system settings]
+      $[Advanced.Performance.Settings...]
+      $[Adjust for best performance] $[...]
+    </d>
+    
+    <d t="windows feature">
+      $[Control Panel .Programs and Features]
+      $[Turn Windows features on or off] $[...]
+    </d>
+    
+    <d t="windows update">
+      $[Task Manager .Services .Open Services] 
+      $[Windows Update Properties]
+      $[General .Startup type .Manual]
+      $[Recovery] $[...]
+    </d>
+    
+    <d t="disable camera and"></d>
+    <d t="create acount images as png file"></d>
+    <d t="flow setting apps"></d>
+    <d t="flow control panels"></d>
+    
+    
+    <d t="flow folder option"></d>
+  
+  </win_10>
+  
+  <win_xp>
+  
+    <d t="ﾃｰﾏの変更"></d>
+    
+    <d t="ｽｸﾘｰﾝｾｰﾊﾞｰ"></d>
+    
+    <d t="ｳｨﾝﾄﾞｳとﾎﾞﾀﾝと配色"></d>
+    
+    <d t="ﾒﾆｭｰのﾌﾟﾛﾊﾟﾃｨ">
+      $[%クイック起動を表示する%]
+      $[%アクティブでないインジケータを隠さない%]
+      $[%クラシックメニューにする%]
+      $[%頻繁に利用するメニューを優先的に表示しない%]
+      $[%小さいアイコンを表示する%]
+    </d>
+    
+    <d t="ﾌｧｲｱｳｫｰﾙの無効化"></d>
+    <d t="自動更新の無効か"></d>
+    <d t="ﾏｳｽ設定">
+      $[デザイン:3Dﾓﾉｸﾛ]
+      $[動作.ポインタを自動的に既定のボタン上に移動する:true]
+      $[表示.文字の入力中にポインタを非表示にする:off]
+      $[表示.Ctrlキーを押すとポインタの位置を表示する:on]
+      $[スクロールする量:１行]
+    </d>
+    
+    <d t="IME設定">
+      $[既定の言語:Standard]
+      $[ｽﾍﾟｰｽの入力:常に半角]
+      $[詳細プロパティ.キー設定:
+        $[
+           $[Shift+Space:全角半角] 
+           $[Shift+Enter:IMEｵﾝｵﾌ]  
+           $[%余分削除%] 
+           $[Ctrl+D:半角ｶﾀｶﾅ] 
+           $[Ctrl+S:全角カタカナ] 
+           $[Ctrl+A:ひらがな] 
+           $[Ctrl+W:半角英数] 
+           $[Ctrl+Q:全角英数]
+        ]
+      ]
+      $[オプション：$[
+        入力モード|IMEパッド|辞書ツール
+      ]]
+    </d>
+    
+    <d t="フォルダオプション">
+      $[%一覧表示%]
+      $[全般.作業：従来のスタイル]
+      $[%アドレスバーにフルパスはする%]
+      $[%タイトルバーにフルパスはしない%]
+      $[%拡張子を出す%]
+      $[%要らんヒントは要らん%]
+      $[%推奨はそのまま%]
+      $[%すべて応用%]
+    </d>
+    
+    <d t="作業フォルダの作成">
+      $[ccmd|Downloads|Home]
+      $[%環境変数のパス編集%]
+    </d>
+    
+    <d t="エクスプローラー範囲ウォールペーパー作成"></d>
+    
+    <d t=""></d>
+    
+  </win_xp>
+  
+  <!-- APP -->
+  
+  <notepadPP></notepadPP>
+  
+  <cae2d>
+    
+    <d t="既定値変更"></d>
+    
+    <d t="ｷｰ登録">
+      $system[
+        $[F11:ｼｽﾃﾑ.ｷｰ登録]
+        $[F12:その他.ﾂｰﾙﾎﾞｯｸｽ変更]
+        $[ESC:実行補助.全取消]
+        $[F1:実行補助.Y/N]
+        $[F2:実行補助.取消]
+        $[F3:作業場.作業場操作]
+        $[F4:ｼｽﾃﾑ.終了]
+      ]
+      $matrix_row_z[
+        $[!1:記号.記号移動]
+        $[!2:ﾀｲﾌﾟ.線種変更]
+        $[!3:作業場.図象切替]
+        $[!4:作業場.作業場更新]
+        $[!5:作業場.図象追加]
+      ]
+      $matrix_row_i[
+        $[!q:変形.要素移動]
+        $[!w:変形.要素複写]
+        $[!e:削除.削除]
+        $[!r:変形.ｶｯﾄ]
+        $[!t:ｺﾒﾝﾄ.]
+      ]
+      $matrix_row_ii[
+        $[!a:.]
+        $[!s:.]
+        $[!d:.]
+        $[!f:.]
+        $[!g:.]
+      ]
+      $matrix_row_iii[
+        $[!z:.]
+        $[!x:.]
+        $[!c:.]
+        $[!v:.]
+        $[!v:.]
+      ]
+    </d>
+    
+    <d t="ﾂｰﾙﾎﾞｯｸｽ変更"></d>
+    
+    <d t="画面表示の切換">
+      $[%ステータスバーを常駐させる%]
+    </d>
+  
+  </cae2d>
+  
+  <excel2003></excel2003>
+  
+  <docuworks></docuworks>
+  
+  <micrexf></micrexf>
+  
+  <sxprogrammer></sxprogrammer>
+  
+  <cxprogrammer></cxprogrammer>
+  
+  
+  
+  
+  
+</root>
