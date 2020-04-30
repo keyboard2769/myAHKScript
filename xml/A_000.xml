@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+  tmp 2003130938
+-->
+<html>
+  <head>
+    <title>A_000</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <body>
+  
+  
+    <!-- title -->
+    <h1>资料名资料名资料名资料名资料名</h1>
+    <table border="1">
+      <tr><td><b>发布</b></td><td>yy-MM-dd</td></tr>
+      <tr><td><b>修改</b></td><td>yy-MM-dd</td></tr>
+      <tr><td><b>范围</b></td><td>未定</td></tr>
+    </table>
+    <br/><hr/><br/>
+    
+    <!-- section -->
+    <h2>分区名分区名分区名分区名分区名分区名</h2>
+    <div>正文正文正文正文正文</div>
+    <div>正文正文正文正文正文</div>
+    <div>正文正文正文正文正文</div>
+    <div>正文正文正文正文正文</div>
+    <div>正文正文正文正文正文</div>
+    <img src="A_000_File/img000.png"/><br/>
+    <textarea rows="9" cols="80" readonly="true" disabled="true">
+·条目条目条目条目条目条目条目条目条目条目
+·条目条目条目条目条目条目条目条目条目条目
+·条目条目条目条目条目条目条目条目条目条目
+·条目条目条目条目条目条目条目条目条目条目
+·条目条目条目条目条目条目条目条目条目条目
+·条目条目条目条目条目条目条目条目条目条目
+·条目条目条目条目条目条目条目条目条目条目
+·条目条目条目条目条目条目条目条目条目条目
+    </textarea>
+    <br/><hr/><br/>
+    
+    <!-- footage -->
+    <a href="index.html">返回目录</a><br/>
+    <a href="file://///192.168.1.6/shiryou/index.html">返回分区主页</a><br/>
+
+  </body>
+</html><!-- EOF -->
