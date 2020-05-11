@@ -4,15 +4,22 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style type="text/css">
+    pre.pre_block{background-color:#EEEEEE;color:#333333;}
+    p.p_block{background-color:#EEEEEE;color:#333333;}
+    ul.ul_block{background-color:#EEEEEE;color:#333333;}
+    b.b_block{background-color:#EEEEEE;color:#333333;}
+    div.div_comment{font-style:italic;color:#339933;}
+  </style>
   <title>A_000</title>
 </head>
 
 <!-- *template*
   <h2>tttttt</h2>
   <h4>ssssss</h4>
-  <img src="ffff/dddd.png" alt="%invalid-image%"/><br/>
+  <br/><img src="ffff/dddd.png" alt="%invalid-image%"/>
   <div>nnnnnn</div>
-  <pre style="background-color:#EEEEEE;color:#333333">
+  <pre class="pre_block">
     - dawdwdwadwad
     - dawdwdwadwad
     - dawdwdwadwad
@@ -48,19 +55,20 @@
   <div>正文正文正文正文正文</div>
   <div>正文正文正文正文正文</div>
   
-  <ul style="background-color:#EEEEEE;color:#333333">
+  <ul class="ul_block">
     <li>列表列表列表列表列表</li>
     <li>列表列表列表列表列表</li>
     <li>列表列表列表列表列表</li>
     <li>列表列表列表列表列表</li>
   </ul>
   
-  <div style="color:#339933;"><em>注记</em></div>
+  <div class="div_comment">注记注记注记注记</div>
   
-  <code>somecode</code>
+  <b class="b_block">somecode</b>
   
-  <img src="A_000_File/img000.png" alt="%无效图片%"/><br/>
-  <pre style="background-color:#EEEEEE;color:#333333">
+  <br/><img src="A_000_File/img000.png" alt="%无效图片%"/>
+  
+  <pre class="pre_block">
     $文本文本文本文本文本文本{
       $文本文本文本文本{}
       $文本文本文本文本{}
@@ -69,12 +77,14 @@
       $文本文本文本文本{}
     }
   </pre>
+  
   <br/><hr/><br/>
   
-  <!-- footage -->
+  <!-- ** ** ** -->
+  
   <a href="index.html">返回目录</a><br/>
   <a href="file://///192.168.1.6/shiryou/index.html">返回分区主页</a><br/>
 
 </body>
 
-</html><!-- EOF -->
+</html>
