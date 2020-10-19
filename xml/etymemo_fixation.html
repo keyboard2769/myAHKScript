@@ -19,7 +19,7 @@
     #[-element-]
       -locale@spelling
         =:derived::related
-        'meaning'*"figuration"
+        'meaning'(grammatical)*"figuration"
         {element+element}
       -@{#sample #sample #sample}
   </pre>
@@ -292,57 +292,33 @@
 #[am-] -lt@amatus:=amare -jp@'愛、好'{#amateur }
 #[phil-] -gr@philos:=philein -jp@'愛、好'{#philosophy #bibliophile }
 #[ero-]gr@-jp@'愛、好'{# }
+#[pulcher-] -lt@pulcher:={x} -jp@'美'{#pulchritude }
+#[cal-] -gr@kallos -jp@'美'{#calligraphy #callisto}
 
 
+#[alb-] -lt@albumen:=albus -jp@'白'{#albumin #albino }
+#[leuco-] -gr@leukos -jp@'白'{#leukemia  }
+#[argo-]gr@-jp@'白'{# }
+#[nigr-] -lt@nigrum -jp@'黒'{#nigger #nigrify }
+#[melano-] -gr@melano:=melas -jp@'黒'{#melanin #melanesia }
+#[rubr-] -lt@rubrica:=ruber -jp@'赤'{#rubric }
+#[erythro-]gr@-jp@'赤'{#erythrocyte #erythrophobia }
+#[caerulei-]lt@-jp@'青'{# }
+#[cya-] -gr@kyanos -jp@'青'{#cyanosis #cyan }
+#[flav-]lt@-jp@'黄'{#flavescent"黄斑" }
+#[lut-]lt@-jp@'黄'{#lutein"叶黄素" }
+#[xantho-]gr@-jp@'黄'{#xanthoma"黄疣" }
+#[purp-] -lt@purpura -jp@'紫'{#purpura #purple }
+#[porphyro-] -gr@porphyra -jp@'紫'{#porphyroid"紫斑" }
+#[virid-]lt@-jp@'緑'{#viridity }
+#[chloro-] -gr@khloros -jp@'緑'{#chlorophyll #chloroform"氯仿" }
 
 
 ;[confirm]::
 
 
 
-
-#[-]lt@-jp@'美'{# }
-#[-]gr@-jp@'美'{# }
-
-
-
-
 ;[head]::
-
-
-
-#[-]lt@-jp@'白'{# }
-#[-]gr@-jp@'白'{# }
-
-
-
-#[-]lt@-jp@'黒'{# }
-#[-]gr@-jp@'黒'{# }
-
-
-
-#[-]lt@-jp@'赤'{# }
-#[-]gr@-jp@'赤'{# }
-
-
-
-#[-]lt@-jp@'青'{# }
-#[-]gr@-jp@'青'{# }
-
-
-
-#[-]lt@-jp@'黄'{# }
-#[-]gr@-jp@'黄'{# }
-
-
-
-#[-]lt@-jp@'紫'{# }
-#[-]gr@-jp@'紫'{# }
-
-
-
-#[-]lt@-jp@'緑'{# }
-#[-]gr@-jp@'緑'{# }
 
 
 
@@ -853,6 +829,7 @@
 
 #[-]lt@-jp@'血'{# }
 #[-]gr@-jp@'血'{# }
+#[-emia] -gr@haima -jp@'血'{#leukemia }
 
 
 
@@ -1262,7 +1239,8 @@
   {#extravagant #vague #noctivagation }
 #[atmo-]gr@'vapor;stream;blow;'{#exoatmosphere }
 #[-caust-]gr@kauston:=kaiein'brun'{#caustic #holocaust }
-#[-graph|gram|graf-]gr@graphein-jp@'引、書、絵'{#graphy #hologram #cacography }
+#[-graph|gram|graf-] -gr@graphein -jp@'引、書、絵'
+  {#graphy #hologram #cacography #calligraphy }
 #[-pot-]lt@potens'power'{#potent #omnipotent }
 #[-spec-]lt@spec(ere)-jp@'視、見'{#retrospect }
 #[-arama-]gr@horama-jp@'視、見'{#panorama }
@@ -1273,7 +1251,8 @@
 #[-trop-]gr@tropos'way;manner;'{#trope #allotrope }
 #[-ple(ct|x)-]lt@plectaere'weave;fold;twine'{#simplex #complex }
 #[in-]lt@'in;to;'{#information }
-#[-osis]lt@gr@(suffix for state or condition){#ankylosis }
+#[-osis] -lt@otio:=asis -gr@osis -jp@(～状|～様)
+  -@{#ankylosis #cyanosis }
 #[andro-]gr@andro-jp@'人形'{#android }
 #[-oid] -gr@eids -jp@'状、形' {#conoid #android #schizoid }
 #[-mancy]gr@manteia'divination;oracle;'-jp@'呪|術'{#rhabdomancy }
@@ -1377,17 +1356,16 @@
   -jp@'撒く、播く、散らかす'*"種" {#gymnosperm }
 #[-urn`] -lt@urnus -jp@'～頃'{#nocturnal }
 #[-soph`] -gr@sophia -jp@'智、識'{#philosophy }
+#[-bib-] -gr@biblion:=byblos -egyptian@papyrus -jp@'本、書(物)'{#bibliophile }
+#[-nesia] -gr@nesos -jp@'島' -@{#melanesia }
+#[-in] -lt@in -jp@'～(物)質'{#melanin }
+#[-form] -lt@formica -jp@'蟻からの'*"蟻酸"{#chloroform }
+#[-phyl] -gr@phyllon -jp@'葉'{#chlorophyll }
 
 
 ;[head]::
 
 
-
-#[--]@''-jp@''{# }
-#[--]@''-jp@''{# }
-#[--]@''-jp@''{# }
-#[--]@''-jp@''{# }
-#[--]@''-jp@''{# }
 #[--]@''-jp@''{# }
 #[--]@''-jp@''{# }
 #[--]@''-jp@''{# }
