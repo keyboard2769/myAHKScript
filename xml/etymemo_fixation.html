@@ -126,12 +126,13 @@
 #[-gon(o)-]gr@-jp@'角'{#pentagon }
 #[-clav(i)-]lt@-jp@'棒'{#clavate #claviform }
 #[rhabdo-]gr@-jp@'棒'{#rhabdomancy }
-#[-ac`-]lt@acu(ere)::acr(es)-jp@'針、鋭'{#acute #acupuncture }
+#[-acu-]lt@acu(ere)::acr(es)-jp@'針、鋭'{#acute #acupuncture }
 #[cuspd-]gr@-jp@'鋭'{#cuspidal }
 #[-tubi-]lt@-jp@'管'{#tubular }
 #[fistuli-]lt@-jp@'管'{#fistula }
 #[siphono-]gr@-jp@'管'{#siphon }
 #[syringo-]gr@-jp@'管'{#syringe }
+#[-aul-] -gr@aulos -jp@'(水)管'{#hydraulic*"圧動学" }
 #[columni-]lt@-jp@'柱'{#column=:columnist }
 #[-styl-]lt@stilus-gr@stylo-jp@'柱'{#style #stylograph }
 #[dia-]gr@dia'across;through;'-jp'通、掛、越'{#diameter }
@@ -263,11 +264,12 @@
 #[-sol-]lt@solv(ere)::solu(tum)-jp'解く'{#solution }
 #[lyso-]gr@-jp@'解く、離れ、溶け'{#lysin #lysogen }
 #[fiss-]lt@find(ere)-jp@'割る、裂く、分け'{#fissure #fission }
+#[-tail|tal-] -lt@taliare -jp@'割る、裂く、分け' {#tailor*"仕立て屋" }
 #[schisto|schizo-]gr@skhizein-jp@'割る'{#schizoid #schizophrenia }
 #[con|com-]lt@-jp@'合、供、並'{#concord #compound }
 #[syn|sym-] -gr@syn -jp@'合' -@{#sympathy #synthesis #synchronize }
 #[amb|amph-] -lt@ -gr@ -jp@'双(方)、(曖)昧'
-  {#ambiguous #ambivalent #amphibia #amphitheater }
+  -@{#ambiguous #ambivalent #amphibia #amphitheater }
 #[para|pari-]lt@-jp@'対、揃い'{#paripinnate }
 #[zygo-]gr@-jp@'対、揃い'{#zygodactyl }
 #[nud-] -lt@nudus -pie@nogw -jp@'裸'{#nudity }
@@ -312,668 +314,588 @@
 #[porphyro-] -gr@porphyra -jp@'紫'{#porphyroid"紫斑" }
 #[virid-]lt@-jp@'緑'{#viridity }
 #[chloro-] -gr@khloros -jp@'緑'{#chlorophyll #chloroform"氯仿" }
+#[-ros-] -lt@ros(a) -jp@'淡赤、薔薇' -@{#rose }
+#[eo-] -gr@ -jp@'淡赤' -@{#eosin"暁紅染め" }
+#[glauc-] -lt@ -gr@glaukos -jp@'灰'{#glauconite #glaucoma }
+#[polio-] -gr@polios -jp@'灰'{#poliomyelitis }
+#[pallid-] -lt@pallidus:=pallere -jp@'浅、淡'{#pallid }
+#[ochro-]gr@-jp@'浅、淡'{# }
+#[obsc-] -lt@obscurus{ob+scurus} -jp@'暗、濃'{#obscuration #obscure }
+#[scoto-] -gr@skotos -jp@'暗、濃'{#scotoma }
+#[amauro-]gr@-jp@'暗、濃'{# }
+#[phaeo-]gr@-jp@'暗、濃'{# }
 
+#[gust-] -lt@gustare -jp@'味'{#gusto"嗜好" }
+#[sapori-]lt@-jp@'味'{#sapor }
+#[geuso-]gr@-jp@'味'{# }
+#[dulci-]lt@-jp@'甘'{#dulcify #dulcit }
+#[glyco-] -gr@glyco -jp@'甘'{#glycogen }
+#[-acid-] -lt@acidus -jp@'酸っぱ、鋭い'{#acidic #acidosis }
+#[-ox-] -gr@oxys -jp@'酸っぱ、鋭い'{#oxygen #peroxide }
+#[salt-] -oe@sealt -gm@saltom -lt@? -jp@'鹸、塩、海'{#salt #saline }
+#[hal-] -gr@hals -jp@'鹸、塩、海'{#halogen #haloid }
+#[amari-]lt@-jp@'苦'{# }
+#[picro-]gr@-jp@'苦'{#picrotoxin }
+#[acr-]  -lt@acer -jp@'辛、鋭い、貫く、渋い'{#acrid #acrimony #acerbic }
+#[drimy-] -gr@ -jp@'辛'{# }
+#[omphaco-] -gr@-jp@'渋'{# }
+#[odor-] -lt@odor -jp@'臭、匂'{#odor #deodorant*"脱臭剤" }
+#[osmo-] -gr@osme -jp@'臭、匂'{#osmics }
+#[suav-] -lt@suavis -jp@'香、芳'{#suave #suavity }
+#[euodomo-]gr@-jp@'香、芳'{# }
+#[-fet-] -lt@fetere -jp@'(悪)臭'{#fetid }
+#[dysodomo-]gr@-jp@'(悪)臭'{# }
+#[inodor-] -lt@{in+oder} -jp@'無(臭)'{#inodorous }
+#[anosmo-] -gr@{an+osme} -jp@'無(臭)'{#anosmia }
 
-;[confirm]::
+#[metalli-] -lt@metallicus -gr@metallikos:=metallon -jp@'鉱、金(属)'
+  -@{#metallic #metallurgy }
+#[aur-] -lt@aureus -jp@'金(色)、光'{#aurum #aureate #aurify }
+#[chryso-] -gr@khrysos -jp@'金(色)、光'{#chrysanthemum"菊" }
+#[arg-] -lt@argentum -gr@? -jp@'銀(色)、白(色)、輝き、財、富'
+  -@{#argent"銀貨" #argyria"銀皮症" }
+#[fer-] -lt@ferrum -jp@'鉄'{#ferri }
+#[sidero-]gr@-jp@'鉄'{#siderology }
+#[aqu-] -lt@aqua -jp@'水'{#aquarium"水族館" }
+#[hydro-] --gr@hydro -jp@'水'{#hydrogen #hydraulic }
+#[vesic-] -lt@vesicare -jp@'泡、(水)疱'{#vesicant*"糜爛" }
+#[physo-]gr@-jp@'泡'{#physostomous }
+#[sulf|sulph-] -lt@sulphur -jp@'硫(黄)'{#sulfer #sulfate }
+#[thio-]gr@-jp@'硫(黄)'{#thiosulfate #thionic }
+#[-mar-] -lt@mare -jp@'海、塩'{#marine #submarine }
+#[ter-] -lt@terra -jp@'土'{#territory #terrestrial }
+#[ge|ga-] -gr@ge=:gaia -jp@'土'{#geology #geometry #gaia }
+#[lapis|lapid-] -lt@lapis -jp@'石、岩'{#lapidary }
+#[saxi-]lt@-jp@'石、岩'{#saxy }
+#[petro-] -lt@petra -jp@'石、岩'{#petroleum }
+#[litho-] -gr@lithos -jp@'石、岩'{#lithography #mesolithic #lithology }
+#[sabuli-]lt@-jp@'砂'{#sabulous }
+#[ammo-]gr@-jp@'砂'{# }
 
 
 
-;[head]::
+#[calci-]lt@-jp@'石灰'{#talcium #calcify }
+#[titano-]gr@-jp@'石灰'{#titanium #titanate}
 
 
 
-#[-]lt@-jp@'淡赤'{# }
-#[-]gr@-jp@'淡赤'{# }
+#[vitri-]lt@-jp@'硝子'{#vitrics }
+#[hyalo-]gr@-jp@'硝子'{#hyaloid }
 
 
 
-#[-]lt@-jp@'灰'{# }
-#[-]gr@-jp@'灰'{# }
+#[sucini-]lt@-jp@'琥珀'{#succinic }
+#[electro-]gr@-jp@'琥珀'{#electrum }
 
 
+#[aer-] -lt@ -gr@ -jp@'(空)気'{#aerobic #aeroplane #aeroneurosis }
 
-#[-]lt@-jp@'浅、淡'{# }
-#[-]gr@-jp@'浅、淡'{# }
 
 
+#[vapori-]lt@-jp@'(大)気、(蒸)気'{#vapor #vaporous }
+#[atmo-]gr@-jp@'(大)気、(蒸)気'{#atmosphere }
 
-#[-]lt@-jp@'暗、濃'{# }
-#[-]gr@-jp@'暗、濃'{# }
 
 
+#[venti-]lt@-jp@'風、気'{#ventilate }
+#[anemo-]gr@-jp@'風、気'{#anemone'風の子'*"銀蓮" }
 
-#[-]lt@-jp@'味'{# }
-#[-]gr@-jp@'味'{# }
 
 
+#[monti-]lt@-jp@'山'{#montane }
+#[oreo|oro-]gr@-jp@'山'{#orometry #orology }
 
-#[-]lt@-jp@'甘'{# }
-#[-]gr@-jp@'甘'{# }
 
 
+#[ign-]lt@ignire:=ignis -jp@'火'{#ignition }
+#[flammi-]lt@-jp@'火'{#flammable }
+#[pyro-]gr@-jp@'火'{#pyromaniac }
 
-#[-]lt@-jp@'酸'{# }
-#[-]gr@-jp@'酸'{# }
 
 
+#[luci-]lt@-jp@'光'{#luciferous }
+#[photo-]gr@-jp@'光'{#photo }
 
-#[-]lt@-jp@'鹸、塩'{# }
-#[-]gr@-jp@'鹸、塩'{# }
 
 
+#[radii-]lt@-jp@'光線'{#radial }
+#[actino-]gr@-jp@'光線'{#actinometer }
 
-#[-]lt@-jp@'苦'{# }
-#[-]gr@-jp@'苦'{# }
 
 
+#[planti-]lt@-jp@'植物'{#plantation }
+#[phyto-]gr@-jp@'植物'{#phytocide }
 
-#[-]lt@-jp@'辛'{# }
-#[-]gr@-jp@'辛'{# }
 
 
+#[herbi-]lt@-jp@'草'{#herbal }
+#[poieo-]gr@-jp@'草'{# }
 
-#[-]lt@-jp@'渋'{# }
-#[-]gr@-jp@'渋'{# }
 
 
+#[fungi-]lt@-jp@'菌'{#fungus }
+#[myco-]gr@-jp@'菌'{#mycology }
 
-#[-]lt@-jp@'臭、匂'{# }
-#[-]gr@-jp@'臭、匂'{# }
 
 
+#[musci-]lt@-jp@'苔、蘚'{#muscology }
+#[bryo-]gr@-jp@'苔、蘚'{#bryozoan }
 
-#[-]lt@-jp@'香、芳'{# }
-#[-]gr@-jp@'香、芳'{# }
 
 
+#[licheni-]lt@-jp@'地衣、菌、藻'{#lichenous }
+#[leicheno-]gr@-jp@'地衣、菌、藻'{# }
 
-#[-]lt@-jp@'(悪)臭'{# }
-#[-]gr@-jp@'(悪)臭'{# }
 
 
+#[arbori-]lt@-jp@'樹'{#arborel }
+#[dendro-]gr@-jp@'樹'{#dendrology #dendroid }
 
-#[-]lt@-jp@'無(臭)'{# }
-#[-]gr@-jp@'無(臭)'{# }
 
 
+#[rami-]lt@-jp@'枝'{#ramify }
+#[-clado]gr@-jp@'枝'{# }
 
-#[-]lt@-jp@'鉱、金(属)'{# }
-#[-]gr@-jp@'鉱、金(属)'{# }
 
 
+#[ligni-]lt@-jp@'材'{#lignify #ligneous }
+#[xylo-]gr@-jp@'材'{#xylophone #xylitol }
 
-#[-]lt@-jp@'金(色)、光'{# }
-#[-]gr@-jp@'金(色)、光'{# }
 
 
+#[spici-]lt@-jp@'穂'{#spica }
+#[stachyo-]gr@-jp@'穂'{# }
 
-#[-]lt@-jp@'銀(色)、財、富'{# }
-#[-]gr@-jp@'銀(色)、財、富'{# }
 
 
+#[cauli-]lt@-jp@'茎'{#caulescent }
+#[caulo-]gr@-jp@'茎'{# }
 
-#[-]lt@-jp@'鉄'{# }
-#[-]gr@-jp@'鉄'{# }
 
 
+#[bulb-] -lt@bulbus -gr@bolbos -jp@'葱'{#bulb #bulbous }
 
-#[-]lt@-jp@'水'{# }
-#[-]gr@-jp@'水'{# }
 
 
+#[folii-]lt@-jp@'葉'{#folium #foliage }
+#[phyllo-]gr@-jp@'葉'{#phylloid #chlorophyll }
 
-#[-]lt@-jp@'泡'{# }
-#[-]gr@-jp@'泡'{# }
 
 
+#[flori-]lt@-jp@'花'{#floral #florist }
+#[antho-]gr@anthos -jp@'花'{#anthology*"文芸集" }
 
-#[-]lt@-jp@'硫(黄)'{# }
-#[-]gr@-jp@'硫(黄)'{# }
 
 
+#[fructu-]lt@-jp@'果'{#fructose }
+#[carpo-]gr@-jp@'果'{#carpology }
 
-#[-]lt@-jp@'海、塩'{# }
-#[-]gr@-jp@'海、塩'{# }
 
 
+#[nuci-]lt@-jp@'(堅)果、核'{#nuclear #nucleous }
+#[caryo-]gr@-jp@'(堅)果、核'{# }
 
-#[-]lt@-jp@'土'{# }
-#[-]gr@-jp@'土'{# }
 
 
+#[bacci-]lt@-jp@'(漿)果'{#bacciferous }
+#[cocco-]gr@kokkos-jp@'(漿)果'{#coccus #cocciferous }
 
-#[-]lt@-jp@'石、岩'{# }
-#[-]gr@-jp@'石、岩'{# }
 
 
+#[semini-]lt@-jp@'種'{#seminar'園芸'*"講習会" #seminate }
+#[spermato-]gr@-jp@'種'{#sperm }
+#[sporo-]gr@-jp@'種'{# }
 
-#[-]lt@-jp@'砂'{# }
-#[-]gr@-jp@'砂'{# }
 
 
+#[radici-]lt@radix -jp@'根'{#radical'根からの'*"急進" }
+#[rhizo-]gr@-jp@'根'{#rhizome }
 
-#[-]lt@-jp@'石灰'{# }
-#[-]gr@-jp@'石灰'{# }
 
 
+#[membrani-]lt@-jp@'皮'{#membrane }
+#[pelliculi-]lt@-jp@'皮'{#pellicle }
+#[hymeno-]gr@-jp@'皮'{#hymenotomy }
 
-#[-]lt@-jp@'硝子'{# }
-#[-]gr@-jp@'硝子'{# }
 
 
+#[cortici-]lt@-jp@'(樹)皮'{#cortin #cortical }
+#[phloio-]gr@-jp@'(樹)皮'{# }
 
-#[-]lt@-jp@'琥珀'{# }
-#[-]gr@-jp@'琥珀'{# }
 
+#[spini-] -oe@spinnan -gm@spinnen -lt@spina -jp@'刺す、(反)骨'
+  -@{#spin #spinal #spine }
+#[acantho-]gr@-jp@'刺す'{#acanthus }
 
 
-#[-]lt@-jp@'(空)気'{# }
-#[-]gr@-jp@'(空)気'{# }
+#[clavi-]lt@-jp@'棘'{#clavichord }
+#[centro-]gr@-jp@'棘'{#centrum }
+#[plectri-]lt@gr@-jp@'棘'{#plectrum #plectron }
 
 
 
-#[-]lt@-jp@'(大)気、(蒸)気'{# }
-#[-]gr@-jp@'(大)気、(蒸)気'{# }
+#[fili-]lt@-jp@'糸'{#filis }
+#[nem-]gr@-jp@'糸'{#nematode }
+#[mito-]gr@-jp@'糸'{# }
 
 
 
-#[-]lt@-jp@'風、気'{# }
-#[-]gr@-jp@'風、気'{# }
+#[pili-]lt@-jp@'毛'{#pile }
+#[capilli-]lt@-jp@'毛'{#capilary }
+#[tricho-]gr@-jp@'毛'{#trichoid }
+#[com-] -gr@kome -jp@'毛'{#coma*"'彗星の端'" }
 
 
 
-#[-]lt@-jp@'山'{# }
-#[-]gr@-jp@'山'{# }
+#[olei-]lt@-jp@'油'{#olein }
+#[elaeo-]gr@-jp@'油'{#eleotene }
 
 
 
-#[-]lt@-jp@'火'{# }
-#[-]gr@-jp@'火'{# }
+#[balsami-]lt@-jp@'(樹)脂、精(油)'{#balsam }
+#[myro-]gr@-jp@'(樹)脂、精(油)'{#myrrh #myrtle }
 
 
 
-#[-]lt@-jp@'光'{# }
-#[-]gr@-jp@'光'{# }
+#[amylo-]lt@gr@-jp@'澱(粉)'{#amylase #amyloid }
 
 
 
-#[-]lt@-jp@'光線'{# }
-#[-]gr@-jp@'光線'{# }
+#[muci-]lt@-jp@'(粘)液'{#mucin #mucilase }
+#[myxo-]gr@-jp@'(粘)液'{#myxoma }
 
 
 
-#[-]lt@-jp@'植物'{# }
-#[-]gr@-jp@'植物'{# }
+#[carbo-]lt@-jp@'炭'{#carbonate }
+#[anthraco-]gr@-jp@'炭'{#anthracene #anthracoid }
 
 
 
-#[-]lt@-jp@'草'{# }
-#[-]gr@-jp@'草'{# }
+#[succi-]lt@-jp@'汁'{#succinic }
+#[chylo|chymo-]gr@khymos:=khylos  -jp@'汁、散る'{#chyle #chyme }
 
 
 
-#[-]lt@-jp@'菌'{# }
-#[-]gr@-jp@'菌'{# }
+#[putri-]lt@-jp@'腐(敗)'{#putrid }
+#[sapro-]gr@-jp@'腐(敗)'{#sapremia }
 
 
 
-#[-]lt@-jp@'苔、蘚'{# }
-#[-]gr@-jp@'苔、蘚'{# }
+#[aceti-]lt@-jp@'酢'{#acetic }
+#[oxo-]gr@-jp@'酢'{#oxygen }
 
 
 
-#[-]lt@-jp@'地衣、菌、藻'{# }
-#[-]gr@-jp@'地衣、菌、藻'{# }
+#[rosi-]lt@-jp@'薔薇'{#rosaceous #rosarian }
+#[rhodo-]gr@-jp@'薔薇'{#rhodopsin }
 
 
 
-#[-]lt@-jp@'樹'{# }
-#[-]gr@-jp@'樹'{# }
+#[uvi-]lt@-jp@'葡萄'{#uvea #uveitis }
+#[botryo-]gr@-jp@'葡萄'{#botryoidal }
 
 
 
-#[-]lt@-jp@'枝'{# }
-#[-]gr@-jp@'枝'{# }
+#[pini-]lt@-jp@'松'{#pine #pinapple }
+#[peukeo-]gr@-jp@'松'{# }
 
 
 
-#[-]lt@-jp@'材'{# }
-#[-]gr@-jp@'材'{# }
+#[animali-]lt@-jp@''*"動物"{#animal }
+#[zoo-]gr@-jp@''*"動物"{#zoology }
 
 
 
-#[-]lt@-jp@'穂'{# }
-#[-]gr@-jp@'穂'{# }
+#[corpori-]lt@-jp@'体'{#corporate }
+#[somato-]gr@-jp@'体'{#somatology #somatoplasm }
 
 
 
-#[-]lt@-jp@'茎'{# }
-#[-]gr@-jp@'茎'{# }
+#[capiti-]lt@-jp@'頭'{#capitate }
+#[cephalo-]gr@-jp@'頭'{# }
 
 
 
-#[-]lt@-jp@'葱'{# }
-#[-]gr@-jp@'葱'{# }
+#[oculi-]lt@-jp@'目'{#binocular }
+#[ophthalmo-]gr@-jp@'目'{#ophthalmology }
 
 
 
-#[-]lt@-jp@'葉'{# }
-#[-]gr@-jp@'葉'{# }
+#[palpebri-]lt@-jp@'瞼'{#palpebra }
+#[blepharo-]gr@-jp@'瞼'{#blepharitis }
 
 
 
-#[-]lt@-jp@'花'{# }
-#[-]gr@-jp@'花'{# }
+#[auri-]lt@-jp@'耳'{#aural }
+#[oto-]gr@-jp@'耳'{#otitis #otosclerosis }
 
 
 
-#[-]lt@-jp@'果'{# }
-#[-]gr@-jp@'果'{# }
+#[nasi-]lt@nasus -jp@'鼻'{#nasal #nasology }
+#[rhino-]gr@rhino:=rhis-jp@'鼻'{#rhinoceros #rhinology }
 
 
 
-#[-]lt@-jp@'(堅)果、核'{# }
-#[-]gr@-jp@'(堅)果、核'{# }
+#[or-]lt@-jp@'口'{#oral }
+#[stoma-]gr@stoma -jp@'口、岬'{#stoma #stomatology }
 
 
 
-#[-]lt@-jp@'(漿)果'{# }
-#[-]gr@-jp@'(漿)果'{# }
+#[rostri-]lt@rostrum:=rodere  -jp@'喙、顎'{#rostral }
+#[-rhyncho]gr@-jp@'喙'{#rhynchocephalian }
 
 
 
-#[-]lt@-jp@'種'{# }
-#[-]gr@-jp@'種'{# }
+#[labii-]lt@-jp@'唇'{#labial }
+#[cheil|chilo-]gr@-jp@'唇'{#cheiloplasty }
 
 
 
-#[-]lt@-jp@'根'{# }
-#[-]gr@-jp@'根'{# }
+#[lingui-]lt@-jp@'舌'{#linguistics #lingual }
+#[glosso-]gr@glotta:=glossa-jp@'舌'{#glottal }
 
 
 
-#[-]lt@-jp@'皮'{# }
-#[-]gr@-jp@'皮'{# }
+#[denti-]lt@-jp@'歯'{#dental }
+#[odonto-]gr@-jp@'歯'{#odontology }
 
 
 
-#[-]lt@-jp@'(樹)皮'{# }
-#[-]gr@-jp@'(樹)皮'{# }
+#[manu-]lt@-jp@'手'{#manual #maneuver }
+#[cheiro|chiro-]gr@-jp@'手'{#chiropractic #chiropody }
 
 
 
-#[-]lt@-jp@'刺す'{# }
-#[-]gr@-jp@'刺す'{# }
+#[ped-]lt@pedale:=pedalis:=pes -jp@'足'{#pedal #pedicure }
+#[pod-]gr@-jp@'足'{#tetrapod #podagra }
 
 
 
-#[-]lt@-jp@'棘'{# }
-#[-]gr@-jp@'棘'{# }
+#[digit-]lt@-jp@'指'{#digital #digitate }
+#[dactylo-]gr@daktylos -jp@'指'{#dactylology #dactylogram #pterodactyl}
 
 
 
-#[-]lt@-jp@'糸'{# }
-#[-]gr@-jp@'糸'{# }
+#[ungui-]lt@-jp@'爪'{#ungula #unguiculate }
+#[clavi-]lt@-jp@'爪'{# }
+#[onycho-]gr@-jp@'爪'{#onychophoran }
+#[gompho-]gr@-jp@'爪'{#gomphosis }
 
 
 
-#[-]lt@-jp@'毛'{# }
-#[-]gr@-jp@'毛'{# }
+#[cuti-]lt@-jp@'(皮)膚、肌'{#cutis }
+#[pelli-]lt@-jp@'(皮)膚、肌'{# }
+#[derm-]gr@-jp@'(皮)膚、肌'{#dermatology }
 
 
+#[umbili-]lt@-jp@'臍'{#umbilical #umbelicate }
+#[omphalo-]gr@-jp@'臍'{#omphalos }
 
-#[-]lt@-jp@'油'{# }
-#[-]gr@-jp@'油'{# }
 
+#[barbi-]lt@-jp@'髭'{#barb }
+#[pogo-]gr@-jp@'髭'{#pogonology #pogonotomy }
 
 
-#[-]lt@-jp@'(樹)脂、精(油)'{# }
-#[-]gr@-jp@'(樹)脂、精(油)'{# }
 
+#[cordi-]lt@-jp@'心'{#cordial }
+#[cardio-]gr@-jp@'心'{#cardiovascular }
 
 
-#[-]lt@-jp@'澱(粉)'{# }
-#[-]gr@-jp@'澱(粉)'{# }
 
+#[stomachi-]lt@stomachus -jp@'胃、(誇)傲、(憤)慨'{#stomach }
+#[gastro-]gr@-jp@'胃'{#gastronomy }
 
 
-#[-]lt@-jp@'(粘)液'{# }
-#[-]gr@-jp@'(粘)液'{# }
 
+#[pulmoni-]lt@-jp@'肺'{#pulmonary }
+#[pneumo-]gr@pneumon-jp@'肺'{#pneumonia }
 
 
-#[-]lt@-jp@'炭'{# }
-#[-]gr@-jp@'炭'{# }
 
+#[reni-]lt@-jp@'腎'{#renal #reniform }
+#[nephro-]gr@-jp@'腎'{#nephrosis }
 
 
-#[-]lt@-jp@'汁'{# }
-#[-]gr@-jp@'汁'{# }
 
+#[lieni-]lt@-jp@'脾'{#lien #lienal }
+#[spleno-]gr@-jp@'脾'{#splenis #splenectomy }
 
 
-#[-]lt@-jp@'腐(敗)'{# }
-#[-]gr@-jp@'腐(敗)'{# }
 
+#[bronch-]lt@gr@-jp@'(気)管'{#bronchitis #bronchoscope }
 
 
-#[-]lt@-jp@'酢'{# }
-#[-]gr@-jp@'酢'{# }
 
+#[pecti-]lt@-jp@'胸'{#pectoral }
+#[stetho-]gr@-jp@'胸'{#stethoscope }
 
 
-#[-]lt@-jp@'薔薇'{# }
-#[-]gr@-jp@'薔薇'{# }
 
+#[ventri-]lt@venter -jp@'腹'{#ventriloquism #ventrotomy }
+#[gastro-]gr@gaster -jp@'腹'{#gastronomy*"享楽主義" }
 
 
-#[-]lt@-jp@'葡萄'{# }
-#[-]gr@-jp@'葡萄'{# }
 
+#[intestini-]lt@-jp@'腸'{#intestine #intestinaflu }
+#[entero-]gr@-jp@'腸'{#enteritis }
 
 
-#[-]lt@-jp@'松'{# }
-#[-]gr@-jp@'松'{# }
 
+#[genu-]lt@-jp@'膝'{#genu #genuflect }
+#[gony-]gr@-jp@'膝'{# }
 
 
-#[-]lt@-jp@''*"動物"{# }
-#[-]gr@-jp@''*"動物"{# }
 
+#[glandi-]lt@-jp@'腺'{#gland #glandule }
+#[adeno-]gr@-jp@'腺'{#adenoid }
 
 
-#[-]lt@-jp@'体'{# }
-#[-]gr@-jp@'体'{# }
 
+#[carni-]lt@-jp@'肉'{#carnival #carnivorous }
+#[sarco-]gr@-jp@'肉'{#sarcoma #sarcoidosis }
 
 
-#[-]lt@-jp@'頭'{# }
-#[-]gr@-jp@'頭'{# }
 
+#[sanguini-]lt@-jp@'血'{# }
+#[-emia-] -gr@haima -jp@'血'{#leukemia #haemoglobin}
 
 
-#[-]lt@-jp@'目'{# }
-#[-]gr@-jp@'目'{# }
 
+#[ossi-]lt@-jp@'骨'{#osside #ossification }
+#[osteo-]gr@-jp@'骨'{#osteoma #osteology }
 
 
-#[-]lt@-jp@'瞼'{# }
-#[-]gr@-jp@'瞼'{# }
 
+#[costi-]lt@-jp@'肋(骨)、脇'{#costo #costotomy }
+#[pleuro-]gr@pleuron:=pleura -jp@'肋(骨)、脇'{#pleura #pleurisy }
 
 
-#[-]lt@-jp@'耳'{# }
-#[-]gr@-jp@'耳'{# }
 
+#[texti-]lt@textus:=texere -jp@'組織、織り(込む)'{#text #textile }
+#[histo-]gr@-jp@'組織'{#histopathology }
 
 
-#[-]lt@-jp@'鼻'{# }
-#[-]gr@-jp@'鼻'{# }
 
+#[celli-]lt@cella:=celare  -jp@'隠し'*"小屋"*"細胞"{#cell #cellular #cellulose }
+#[cyto-]gr@-jp@'細胞'{#cytology #cytoplasm }
 
 
-#[-]lt@-jp@'口'{# }
-#[-]gr@-jp@'口'{# }
 
+#[nervi-]lt@-jp@'神経、脈(絡)'{#nerve #nervous }
+#[neuro-]gr@-jp@'神経、脈(絡)'{#neural #neuralgia }
 
 
-#[-]lt@-jp@'嘴'{# }
-#[-]gr@-jp@'嘴'{# }
 
+#[arterii-]lt@-jp@'(動)脈'{#artery #arterial }
+#[arterio-]gr@-jp@'(動)脈'{#arteriosclerosis }
 
 
-#[-]lt@-jp@'唇'{# }
-#[-]gr@-jp@'唇'{# }
 
+#[veni-]lt@-jp@'(静)脈'{#venous }
+#[phlebo-]gr@-jp@'(静)脈'{#phleboid }
 
 
-#[-]lt@-jp@'舌'{# }
-#[-]gr@-jp@'舌'{# }
 
+#[musculi-]lt@-jp@'筋(肉)'{#muscle #muscular }
+#[myo-]gr@mys-jp@'鼠'*"筋(肉)"{#myology }
 
 
-#[-]lt@-jp@'歯'{# }
-#[-]gr@-jp@'歯'{# }
 
+#[peni-]lt@-jp@'陰茎'{#penis #penile }
+#[phallo-]gr@-jp@'陰茎'{#phallus #phallicism }
 
 
-#[-]lt@-jp@'手'{# }
-#[-]gr@-jp@'手'{# }
+#[testi-]lt@-jp@'睾(丸)'{#testis #testicular }
+#[orchido-]gr@-jp@'睾(丸)'{#orchitis }
 
 
 
-#[-]lt@-jp@'足'{# }
-#[-]gr@-jp@'足'{# }
+#[mammi-]lt@mammalisi:=mamma -jp@'乳(房)、哺(乳)'{#mammal #mammography }
+#[masto-]gr@-jp@'乳(房)'{#mastitis }
 
 
 
-#[-]lt@-jp@'指'{# }
-#[-]gr@-jp@'指'{# }
+#[lacti-]lt@-jp@'乳(汁)'{#lactose #lactic }
+#[galacto-]gr@galaxis:=kyaklos:=gala-jp@'乳(汁)'{#galactose #galaxy }
 
 
 
-#[-]lt@-jp@'爪'{# }
-#[-]gr@-jp@'爪'{# }
+#[uteri-]lt@-jp@'子宮'{#uterus #uterine }
+#[hystero-]gr@-jp@'子宮'{#hysteria #hysterical }
 
 
 
-#[-]lt@-jp@'(皮)膚、肌'{# }
-#[-]gr@-jp@'(皮)膚、肌'{# }
+#[vagini-]lt@-jp@'膣、鞘 '{#vagina #vaginitis }
+#[col-]gr@-jp@'膣、鞘 '{#coleopteran }
 
 
 
-#[-]lt@-jp@'髭'{# }
-#[-]gr@-jp@'髭'{# }
+#[ovarii-]lt@-jp@'卵巣'{#ovary #ovariotomy }
+#[oophoro-]gr@-jp@'卵巣'{#oophoritis }
 
 
 
-#[-]lt@-jp@'心'{# }
-#[-]gr@-jp@'心'{# }
+#[corni-]lt@-jp@'角'{#cornea #corneous  }
+#[cer-]gr@-jp@'角'{# }
 
 
 
-#[-]lt@-jp@'胃'{# }
-#[-]gr@-jp@'胃'{# }
+#[caudi-]lt@-jp@'尾'{#caudal #caudate }
+#[cerco-]gr@-jp@'尾'{# }
+#[uro-]gr@-jp@'尾'{#urochord }
 
 
 
-#[-]lt@-jp@'肺'{# }
-#[-]gr@-jp@'肺'{# }
+#[squami-]lt@-jp@'鱗'{#squama #squamous }
+#[lepido-]gr@-jp@'鱗'{#lepidopteran #lepidolite }
 
 
+#[penni-]lt@-jp@'羽'{#penniform }
+#[ali-]lt@-jp@'羽'{#aliped }
+#[ptero-]gr@pteron -jp@'羽、翼'{#pterodactyl }
 
-#[-]lt@-jp@'腎'{# }
-#[-]gr@-jp@'腎'{# }
 
+#[ovi-]lt@-jp@'卵'{#oval }
+#[oo-]gr@-jp@'卵'{#oocyte #oogenesis }
 
 
-#[-]lt@-jp@'脾'{# }
-#[-]gr@-jp@'脾'{# }
+#[vitelli-]lt@-jp@'(卵)黄'{#vitellus #vitelline }
+#[lecitho-]gr@-jp@'(卵)黄'{#lecithin }
 
 
+#[gluti-]lt@-jp@'膠'{#gluten #glutinous }
+#[collo-]gr@-jp@'膠'{#colloid }
 
-#[-]lt@-jp@'(気)管'{# }
-#[-]gr@-jp@'(気)管'{# }
 
+#[cer-]lt@gr@-jp@'蝋'{#ceroplastic #cerograph }
 
 
-#[-]lt@-jp@'胸'{# }
-#[-]gr@-jp@'胸'{# }
+#[adipi-]lt@-jp@'(油)脂'{#adipose #adiposity }
+#[sebi-]lt@-jp@'(油)脂'{#sebum }
+#[lipo-]gr@-jp@'(油)脂'{#lipoid }
+#[stearo-]gr@-jp@'(油)脂'{#stearin }
 
 
+#[bili-]lt@-jp@'(胆)汁'{#biliary #bilious }
+#[chol-]gr@-jp@'(胆)汁'{#cholera #cholestosis }
 
-#[-]lt@-jp@'腹'{# }
-#[-]gr@-jp@'腹'{# }
 
+#[faeci-]lt@-jp@'糞'{#fecal }
+#[copro-]gr@-jp@'糞'{#coprology }
 
 
-#[-]lt@-jp@'腸'{# }
-#[-]gr@-jp@'腸'{# }
+#[urini-]lt@-jp@'尿'{#urinary }
+#[uro-]gr@-jp@'尿'{#urology }
 
 
 
-#[-]lt@-jp@'膝'{# }
-#[-]gr@-jp@'膝'{# }
+#[salii-]lt@-jp@'唾液 '{#saliva #salivate }
+#[sialo-]gr@-jp@'唾液 '{# }
 
 
 
-#[-]lt@-jp@'腺'{# }
-#[-]gr@-jp@'腺'{# }
-
-
-
-#[-]lt@-jp@'肉'{# }
-#[-]gr@-jp@'肉'{# }
-
-
-
-#[-]lt@-jp@'血'{# }
-#[-]gr@-jp@'血'{# }
-#[-emia] -gr@haima -jp@'血'{#leukemia }
-
-
-
-#[-]lt@-jp@'骨'{# }
-#[-]gr@-jp@'骨'{# }
-
-
-
-#[-]lt@-jp@'肋(骨)、脇'{# }
-#[-]gr@-jp@'肋(骨)、脇'{# }
-
-
-
-#[-]lt@-jp@'組織'{# }
-#[-]gr@-jp@'組織'{# }
-
-
-
-#[-]lt@-jp@'細胞'{# }
-#[-]gr@-jp@'細胞'{# }
-
-
-
-#[-]lt@-jp@'神経、脈(絡)'{# }
-#[-]gr@-jp@'神経、脈(絡)'{# }
-
-
-
-#[-]lt@-jp@'(動)脈'{# }
-#[-]gr@-jp@'(動)脈'{# }
-
-
-
-#[-]lt@-jp@'(静)脈'{# }
-#[-]gr@-jp@'(静)脈'{# }
-
-
-
-#[-]lt@-jp@'筋(肉)'{# }
-#[-]gr@-jp@'筋(肉)'{# }
-
-
-
-#[-]lt@-jp@'陰茎'{# }
-#[-]gr@-jp@'陰茎'{# }
-
-
-#[-]lt@-jp@'睾(丸)'{# }
-#[-]gr@-jp@'睾(丸)'{# }
-
-
-
-#[-]lt@-jp@'乳(房)'{# }
-#[-]gr@-jp@'乳(房)'{# }
-
-
-
-#[-]lt@-jp@'乳(汁)'{# }
-#[-]gr@-jp@'乳(汁)'{# }
-
-
-
-#[-]lt@-jp@'子宮'{# }
-#[-]gr@-jp@'子宮'{# }
-
-
-
-#[-]lt@-jp@'膣、鞘 '{# }
-#[-]gr@-jp@'膣、鞘 '{# }
-
-
-
-#[-]lt@-jp@'卵巣'{# }
-#[-]gr@-jp@'卵巣'{# }
-
-
-
-#[-]lt@-jp@'角'{# }
-#[-]gr@-jp@'角'{# }
-
-
-
-#[-]lt@-jp@'尾'{# }
-#[-]gr@-jp@'尾'{# }
-
-
-
-#[-]lt@-jp@'鱗'{# }
-#[-]gr@-jp@'鱗'{# }
-
-
-
-#[-]lt@-jp@'羽'{# }
-#[-]gr@-jp@'羽'{# }
-
-
-
-#[-]lt@-jp@'卵'{# }
-#[-]gr@-jp@'卵'{# }
-
-
-
-#[-]lt@-jp@'(卵)黄'{# }
-#[-]gr@-jp@'(卵)黄'{# }
-
-
-
-#[-]lt@-jp@'膠'{# }
-#[-]gr@-jp@'膠'{# }
-
-
-
-#[-]lt@-jp@'蝋'{# }
-#[-]gr@-jp@'蝋'{# }
-
-
-
-#[-]lt@-jp@'(油)脂'{# }
-#[-]gr@-jp@'(油)脂'{# }
-
-
-
-#[-]lt@-jp@'(胆)汁'{# }
-#[-]gr@-jp@'(胆)汁'{# }
-
-
-
-#[-]lt@-jp@'糞'{# }
-#[-]gr@-jp@'糞'{# }
-
-
-
-#[-]lt@-jp@'尿'{# }
-#[-]gr@-jp@'尿'{# }
-
-
-
-#[-]lt@-jp@'唾液 '{# }
-#[-]gr@-jp@'唾液 '{# }
-
-
-
-#[-]lt@-jp@'酵(素)'{# }
-#[-]gr@-jp@'酵(素)'{# }
+#[fermenti-]lt@-jp@'酵(素)'{#fermentation }
+#[zymo-]gr@-jp@'酵(素)'{#enzyme }
 
 
 
@@ -1175,11 +1097,8 @@
 #[-are]lt@area'piece of ground'{#hectare }
 #[gr@noos]'mind'{#paranoia }
 #[gr@nomos]'law'{#Deuteronomy }
-#[gr@oxys]'sharp;acid'{#peroxide}
-#[-acid-]lt@acidus'sour;sharp;tart'{#peroxide}
 #[lt@sonus]'sound'{#supersonic}
 #[-ject]lt@iacere'throw'{#subject}
-#[-mar-]-lt@mar(e)'sea;water'{#submarine}
 #[-crasy]gr@krinein'sift;decide'{#hypocrisy }
 #[-thesis] -gr@tithenai -jp@'置く、渡す'[#hypothesis #synthesis]
 #[-tude]lt@tudo(suffix for abstrac noun or participles){#magnitude }
@@ -1194,7 +1113,6 @@
 #[-yl(lene)]gr@hyle'wood;building stuff;raw material'{#ethylene #methylene }
 #[-vity]lt@aevum'lifetime;age'{#longevity }
 #[-nation-]lt@nationem:=nasci'born'{#international }
-#[-lith-]gr@lithikos'stone'{#mesolithic #lithology}
 #[-potam-]gr@potamos'river'{#mesopotamia #hippopotamus}
 #[-chron-]gr@khronos'time'{#anachronism }
   </p>
@@ -1247,7 +1165,8 @@
 #[-mim(e)-]gr@mimos''{#mime #pantomime }
 #[dis-]lt@'aside'{#diversify }
 #[-vers|vert-]lt@versus:=vertere'turn;bend;'{#diversify }
-#[-gen(e)-]gr@genos-jp@'種、族、積、生、創'{#gene #heterogeneous #homogenize}
+#[-gen(e)-]gr@genos-jp@'種、族、積、生、創'
+  -@{#gene #heterogeneous #homogenize #hydrogen }
 #[-trop-]gr@tropos'way;manner;'{#trope #allotrope }
 #[-ple(ct|x)-]lt@plectaere'weave;fold;twine'{#simplex #complex }
 #[in-]lt@'in;to;'{#information }
@@ -1275,7 +1194,6 @@
 #[-(reg|rex)`-]lt@reg(ere)-jp@'支配'{#regulation #rex }
 #[-cap`-]lt@cap(io)-jp'捕'{#capture }
 #[-anim`-]lt@anim(a)-jp@'息'{#animation }
-#[-ros`-]lt@ros(a)-jp@'薔薇'{#rose }
 #[-domin`-]lt@domin(us)-jp'主'{# }
 #[-camp`)-]lt@camp(us)-jp@'場、野'{# }
 #[-medic`-]lt@medic(us)-jp@'医'{#medicine }
@@ -1361,11 +1279,27 @@
 #[-in] -lt@in -jp@'～(物)質'{#melanin }
 #[-form] -lt@formica -jp@'蟻からの'*"蟻酸"{#chloroform }
 #[-phyl] -gr@phyllon -jp@'葉'{#chlorophyll }
+#[-myel-] -gr@myelos -jp@'髄'{#poliomyelitis }
+#[-itis] -gr@ -jp@'(炎)症、状、属'{#poliomyelitis }
+#[-oma-] -gr@omma -jp@'目、眼'{#glaucoma }
+#[--] -lt@scurus -jp@'覆う'{# }
+#[-ter|tri-]@terere -jp@'奪う、着る'{#detriment }
+#[-mony] -lt@monica -jp@(～の動作、～状、～感){#acrimony }
+#[-erg-] -gr@ergon -jp@'業、工'{#metallurgy }
+#[-anth-] -gr@anthemon -jp@'花'{#anther #chrysanthemum }
+#[-orium]lt@-jp@'～場'{#territory:=lt@{territorium } #aquarium }
+
 
 
 ;[head]::
 
 
+#[--]@''-jp@''{# }
+#[--]@''-jp@''{# }
+#[--]@''-jp@''{# }
+#[--]@''-jp@''{# }
+#[--]@''-jp@''{# }
+#[--]@''-jp@''{# }
 #[--]@''-jp@''{# }
 #[--]@''-jp@''{# }
 #[--]@''-jp@''{# }
@@ -1435,8 +1369,9 @@ sub 場所の下に|時間の頃に|官僚の下に
   <h3>COPY | Hardline ** Not Building Block</h3>
   
   <p>
-#card-lt@charta-gr@khartes-jp'葉、板、紙'
-  
+#card -lt@charta -gr@khartes -jp'葉、板、紙'
+#eschew -fr@eschiver -gm@skeukhwaz -jp'避け、逃げ、怯え'
+#guru -hindu@guru -jp@'先生、師匠'
   </p>
   
   <!-- ** ** -->
@@ -1453,6 +1388,11 @@ sub 場所の下に|時間の頃に|官僚の下に
   {#mackintosh }
 #[-hold-] -me@holden -oe@haldan -jp@'持つ、掴む、保(有)ｽﾙ、控え'
   {#behold }
+  </p>
+  
+  <p>
+#rift -scandinavian@rift'壊す' -oldNorse@ripa'(契約を)破る'
+##
   </p>
   
   
